@@ -9,7 +9,7 @@ import {
   MASK_R5,
   WHITE_START,
 } from "./bitboard";
-import { getBitCount, getBitSplitArray } from "./helpers";
+import { getBitSplitArray } from "./helpers";
 import { Move, Player, Status } from "./types";
 
 export class Draughts {
@@ -128,23 +128,11 @@ export class Draughts {
 
   private _generateJumps(jumpers: number): Move[] {
     let generated: Move[] = [];
-    let captureRecord = 0;
     const jumpersSplit: number[] = getBitSplitArray(jumpers);
 
     for (const jumper of jumpersSplit) {
-      for (const jumpMove of this._generateOriginJumps(jumper)) {
-        // Count the number of captures in the move
-        const captureCount = getBitCount(jumpMove.captures);
-
-        // If the capture count is bigger this is a forced move
-        if (captureCount > captureRecord) {
-          generated = [jumpMove];
-
-          // If the capture count is the same player has a choice of mvoes
-        } else if (captureCount === captureRecord) {
-          generated.push(jumpMove);
-        }
-      }
+      const jumpMoves = this._generateOriginJumps(jumper);
+      generated = generated.concat(jumpMoves);
     }
     return generated;
   }
