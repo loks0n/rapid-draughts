@@ -1,8 +1,8 @@
-declare let S: Record<number, number>;
+declare const S: Record<number, number>;
 export { S };
-export declare const WHITE_START: number;
-export declare const BLACK_START: number;
-export declare const KING_START: number;
+export declare const WHITE_START = 4095;
+export declare const BLACK_START = 4293918720;
+export declare const KING_START = 0;
 export declare const MASK_L3: number;
 export declare const MASK_L5: number;
 export declare const MASK_R3: number;

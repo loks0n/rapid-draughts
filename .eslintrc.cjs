@@ -8,7 +8,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:unicorn/all',
-    'plugin:jsdoc/recommended',
     'eslint-config-prettier',
   ],
   overrides: [],

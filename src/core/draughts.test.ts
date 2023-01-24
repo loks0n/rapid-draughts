@@ -1,5 +1,5 @@
 import { test, assert, describe, beforeEach } from 'vitest';
-import { Draughts, S } from './index';
+import { Draughts, S } from '../index';
 import { Player, Status } from './types';
 
 describe('simple capture', () => {

@@ -1,4 +1,4 @@
-import { Move, Player, Status } from "./types";
+import { Move, Player, Status } from './types';
 export declare class Draughts {
     readonly white: number;
     readonly black: number;
