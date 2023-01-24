@@ -2,7 +2,7 @@
 
 **rapid-draughts** is a *super speedy, blazing fast, rocket-powered* 8x8 board TypeScript draughts/checkers engine.
 
-It uses Bitboards, a board representation that hold the draughts board in three 32 bit unsigned integers. One for the white pieces, black pieces and the king pieces.
+It uses bitboards, a board representation that holds the draughts board in three 32 bit unsigned integers. One for the white pieces, black pieces and the king pieces.
 
 Bitboards enable fast move generation and have minimal memory usage.
 
