@@ -28,6 +28,13 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-jsdoc": "^39.6.8",
+    "eslint-plugin-unicorn": "^45.0.2",
+    "prettier": "^2.8.3",
     "publint": "^0.1.9",
     "typescript": "^4.9.4",
     "vite": "^4.0.4",

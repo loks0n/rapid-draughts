@@ -12,17 +12,17 @@
  *   ----------------
  */
 
-let S: Record<number, number> = [];
+const S: Record<number, number> = [];
 S[0] = 1;
-for (let i = 1; i < 32; i++) {
-  S[i] = S[i - 1] * 2;
+for (let index = 1; index < 32; index++) {
+  S[index] = S[index - 1] * 2;
 }
 
 export { S };
 
-export const WHITE_START: number = 0b00000000000000000000111111111111;
-export const BLACK_START: number = 0b11111111111100000000000000000000;
-export const KING_START: number = 0b00000000000000000000000000000000;
+export const WHITE_START = 0b0000_0000_0000_0000_0000_1111_1111_1111;
+export const BLACK_START = 0b1111_1111_1111_0000_0000_0000_0000_0000;
+export const KING_START = 0b0000_0000_0000_0000_0000_0000_0000_0000;
 
 export const MASK_L3 =
   S[1] |

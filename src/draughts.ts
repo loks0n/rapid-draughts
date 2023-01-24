@@ -8,9 +8,9 @@ import {
   MASK_R3,
   MASK_R5,
   WHITE_START,
-} from "./bitboard";
-import { getBitSplitArray } from "./helpers";
-import { Move, Player, Status } from "./types";
+} from './bitboard';
+import { getBitSplitArray } from './helpers';
+import { Move, Player, Status } from './types';
 
 export class Draughts {
   readonly white: number;
@@ -23,7 +23,7 @@ export class Draughts {
   private readonly whiteKing: number;
   private readonly blackKing: number;
 
-  private _moves: Move[] | null = null;
+  private _moves: Move[] | undefined = undefined;
 
   constructor(
     white = WHITE_START,
@@ -55,7 +55,7 @@ export class Draughts {
     }
 
     if (!contains) {
-      throw Error("invalid move");
+      throw new Error('invalid move');
     }
 
     if (this.playerToMove === Player.WHITE) return this._moveWhite(move);
@@ -63,7 +63,7 @@ export class Draughts {
   }
 
   moves(): Move[] {
-    if (this._moves === null) {
+    if (this._moves === undefined) {
       const jumpers = this._getJumpers();
       if (jumpers) return this._generateJumps(jumpers);
 
@@ -85,54 +85,54 @@ export class Draughts {
   private _moveWhite(move: Move): Draughts {
     // Remove origin piece from white and kings
     const isKing = move.origin & this.king;
-    let newWhite = this.white ^ move.origin;
-    let newKing = this.king ^ isKing;
+    let white = this.white ^ move.origin;
+    let king = this.king ^ isKing;
 
     // Remove captures from black and kings
-    let newBlack = this.black ^ move.captures;
-    newKing ^= move.captures & this.king;
+    const black = this.black ^ move.captures;
+    king ^= move.captures & this.king;
 
     // Place destination piece in white and kings
-    newWhite |= move.destination;
-    newKing |= isKing ? move.destination : move.destination & MASK_KING_WHITE;
+    white |= move.destination;
+    king |= isKing ? move.destination : move.destination & MASK_KING_WHITE;
 
-    return new Draughts(newWhite, newBlack, newKing, Player.BLACK);
+    return new Draughts(white, black, king, Player.BLACK);
   }
 
   private _moveBlack(move: Move): Draughts {
     // Remove origin piece from black and kings
     const isKing = move.origin & this.king;
-    let newBlack = this.black ^ move.origin;
-    let newKing = this.king ^ isKing;
+    let black = this.black ^ move.origin;
+    let king = this.king ^ isKing;
 
     // Remove captures from white and kings
-    let newWhite = this.white ^ move.captures;
-    newKing ^= move.captures & this.king;
+    const white = this.white ^ move.captures;
+    king ^= move.captures & this.king;
 
     // Place destination piece in black and kings
-    newBlack |= move.destination;
-    newKing |= isKing ? move.destination : move.destination & MASK_KING_BLACK;
+    black |= move.destination;
+    king |= isKing ? move.destination : move.destination & MASK_KING_BLACK;
 
-    return new Draughts(newWhite, newBlack, newKing, Player.WHITE);
+    return new Draughts(white, black, king, Player.WHITE);
   }
 
   private _generateMoves(movers: number): Move[] {
-    let generated: Move[] = [];
+    const generated: Move[] = [];
     const moversSplit: number[] = getBitSplitArray(movers);
 
     for (const movers of moversSplit) {
-      generated = generated.concat(this._generateOriginMoves(movers));
+      generated.push(...this._generateOriginMoves(movers));
     }
     return generated;
   }
 
   private _generateJumps(jumpers: number): Move[] {
-    let generated: Move[] = [];
+    const generated: Move[] = [];
     const jumpersSplit: number[] = getBitSplitArray(jumpers);
 
     for (const jumper of jumpersSplit) {
       const jumpMoves = this._generateOriginJumps(jumper);
-      generated = generated.concat(jumpMoves);
+      generated.push(...jumpMoves);
     }
     return generated;
   }
@@ -144,7 +144,7 @@ export class Draughts {
   }
 
   private _generateOriginMovesWhite(origin: number) {
-    let moves: Move[] = [];
+    const moves: Move[] = [];
     const captures = 0;
 
     const d1 = (origin << 4) & this.noPieces;
@@ -171,7 +171,7 @@ export class Draughts {
   }
 
   private _generateOriginMovesBlack(origin: number) {
-    let moves: Move[] = [];
+    const moves: Move[] = [];
     const captures = 0;
 
     const d1 = (origin >> 4) & this.noPieces;
@@ -198,12 +198,12 @@ export class Draughts {
   }
 
   private _generateOriginJumps(origin: number): Move[] {
-    let searchStack: Move[] =
+    const searchStack: Move[] =
       this.playerToMove === Player.WHITE
         ? this._generateOriginJumpWhite(origin)
         : this._generateOriginJumpBlack(origin);
 
-    let jumpsStack: Move[] = [];
+    const jumpsStack: Move[] = [];
 
     while (searchStack.length > 0) {
       const jumpMove = searchStack.pop();
@@ -239,7 +239,7 @@ export class Draughts {
     origin: number,
     king = origin & this.whiteKing
   ): Move[] {
-    let moves: Move[] = [];
+    const moves: Move[] = [];
 
     const c1 = (origin << 4) & this.black;
     const d1 = (((c1 & MASK_L3) << 3) | ((c1 & MASK_L5) << 5)) & this.noPieces;
@@ -277,7 +277,7 @@ export class Draughts {
     origin: number,
     king = origin & this.blackKing
   ): Move[] {
-    let moves: Move[] = [];
+    const moves: Move[] = [];
 
     const c1 = (origin >> 4) & this.white;
     const d1 = (((c1 & MASK_R3) >> 3) | ((c1 & MASK_R5) >> 5)) & this.noPieces;
@@ -318,30 +318,32 @@ export class Draughts {
 
   private _getBlackJumpers(): number {
     let movers = 0;
-    let temp = (this.noPieces << 4) & this.white;
+    let temporary = (this.noPieces << 4) & this.white;
 
-    if (temp) {
+    if (temporary) {
       movers |=
-        (((temp & MASK_L3) << 3) | ((temp & MASK_L5) << 5)) & this.black;
+        (((temporary & MASK_L3) << 3) | ((temporary & MASK_L5) << 5)) &
+        this.black;
     }
 
-    temp =
+    temporary =
       (((this.noPieces & MASK_L3) << 3) | ((this.noPieces & MASK_L5) << 5)) &
       this.white;
-    movers |= (temp << 4) & this.black;
+    movers |= (temporary << 4) & this.black;
 
     if (this.blackKing) {
-      temp = (this.noPieces >> 4) & this.white;
+      temporary = (this.noPieces >> 4) & this.white;
 
-      if (temp) {
+      if (temporary) {
         movers |=
-          (((temp & MASK_R3) >> 3) | ((temp & MASK_R5) >> 5)) & this.blackKing;
+          (((temporary & MASK_R3) >> 3) | ((temporary & MASK_R5) >> 5)) &
+          this.blackKing;
       }
 
-      temp =
+      temporary =
         (((this.noPieces & MASK_R3) >> 3) | ((this.noPieces & MASK_R5) >> 5)) &
         this.white;
-      if (temp) movers |= (temp >> 4) & this.blackKing;
+      if (temporary) movers |= (temporary >> 4) & this.blackKing;
     }
 
     return movers;
@@ -349,30 +351,32 @@ export class Draughts {
 
   private _getWhiteJumpers(): number {
     let movers = 0;
-    let temp = (this.noPieces >> 4) & this.black;
+    let temporary = (this.noPieces >> 4) & this.black;
 
-    if (temp) {
+    if (temporary) {
       movers |=
-        (((temp & MASK_R3) >> 3) | ((temp & MASK_R5) >> 5)) & this.white;
+        (((temporary & MASK_R3) >> 3) | ((temporary & MASK_R5) >> 5)) &
+        this.white;
     }
 
-    temp =
+    temporary =
       (((this.noPieces & MASK_R3) >> 3) | ((this.noPieces & MASK_R5) >> 5)) &
       this.black;
-    movers |= (temp >> 4) & this.white;
+    movers |= (temporary >> 4) & this.white;
 
     if (this.whiteKing) {
-      temp = (this.noPieces << 4) & this.black;
+      temporary = (this.noPieces << 4) & this.black;
 
-      if (temp) {
+      if (temporary) {
         movers |=
-          (((temp & MASK_L3) << 3) | ((temp & MASK_L5) << 5)) & this.whiteKing;
+          (((temporary & MASK_L3) << 3) | ((temporary & MASK_L5) << 5)) &
+          this.whiteKing;
       }
 
-      temp =
+      temporary =
         (((this.noPieces & MASK_L3) << 3) | ((this.noPieces & MASK_L5) << 5)) &
         this.black;
-      if (temp) movers |= (temp << 4) & this.whiteKing;
+      if (temporary) movers |= (temporary << 4) & this.whiteKing;
     }
 
     return movers;

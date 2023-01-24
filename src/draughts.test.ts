@@ -1,21 +1,21 @@
-import { test, assert, describe, beforeEach } from "vitest";
-import { Draughts, S } from "./index";
-import { Player, Status } from "./types";
+import { test, assert, describe, beforeEach } from 'vitest';
+import { Draughts, S } from './index';
+import { Player, Status } from './types';
 
-describe("simple capture", () => {
+describe('simple capture', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
     draughts = new Draughts(S[13], S[18] | S[28]);
   });
 
-  test("correct moves", () => {
+  test('correct moves', () => {
     assert.sameDeepMembers(draughts.moves(), [
       { origin: S[13], destination: S[22], captures: S[18] },
     ]);
   });
 
-  test("capture is forced", () => {
+  test('capture is forced', () => {
     assert.throw(() => {
       draughts = draughts.move({
         origin: S[13],
@@ -26,34 +26,34 @@ describe("simple capture", () => {
   });
 });
 
-describe("double capture", () => {
+describe('double capture', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
     draughts = new Draughts(S[0], S[4] | S[13]);
   });
 
-  test("correct moves", () => {
+  test('correct moves', () => {
     assert.sameDeepMembers(draughts.moves(), [
       { origin: S[0], destination: S[18], captures: S[4] | S[13] },
     ]);
   });
 });
 
-describe("king capture", () => {
+describe('king capture', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
     draughts = new Draughts(S[4], S[9] | S[3], S[4]);
   });
 
-  test("correct moves", () => {
+  test('correct moves', () => {
     assert.sameDeepMembers(draughts.moves(), [
       { origin: S[4], destination: S[13], captures: S[9] },
     ]);
   });
 
-  test("can make valid move", () => {
+  test('can make valid move', () => {
     assert.doesNotThrow(() => {
       draughts = draughts.move({
         origin: S[4],
@@ -68,20 +68,20 @@ describe("king capture", () => {
   });
 });
 
-describe("king backwards capture", () => {
+describe('king backwards capture', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
     draughts = new Draughts(S[18], S[13] | S[3], S[18]);
   });
 
-  test("correct moves", () => {
+  test('correct moves', () => {
     assert.sameDeepMembers(draughts.moves(), [
       { origin: S[18], destination: S[9], captures: S[13] },
     ]);
   });
 
-  test("can make valid move", () => {
+  test('can make valid move', () => {
     assert.doesNotThrow(() => {
       draughts = draughts.move({
         origin: S[18],
@@ -96,7 +96,7 @@ describe("king backwards capture", () => {
   });
 });
 
-describe("make king", () => {
+describe('make king', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
@@ -104,7 +104,7 @@ describe("make king", () => {
     assert.equal(draughts.king, 0);
   });
 
-  test("king is made", () => {
+  test('king is made', () => {
     draughts = draughts.move({
       origin: S[24],
       destination: S[28],
@@ -114,14 +114,14 @@ describe("make king", () => {
   });
 });
 
-describe("white wins", () => {
+describe('white wins', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
     draughts = new Draughts(S[17], S[21]);
   });
 
-  test("can win with move", () => {
+  test('can win with move', () => {
     assert.equal(draughts.status(), Status.PLAYING);
 
     draughts = draughts.move({
@@ -134,14 +134,14 @@ describe("white wins", () => {
   });
 });
 
-describe("black wins", () => {
+describe('black wins', () => {
   let draughts: Draughts;
 
   beforeEach(() => {
     draughts = new Draughts(S[17], S[21], 0, Player.BLACK);
   });
 
-  test("can win with move", () => {
+  test('can win with move', () => {
     assert.equal(draughts.status(), Status.PLAYING);
 
     draughts = draughts.move({

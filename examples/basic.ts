@@ -1,10 +1,10 @@
-import { Draughts } from "../src";
+import { Draughts } from '../src';
 
 // Initialise the board
 let draughts = new Draughts();
 
 // Play 10 moves
-for (let i = 0; i < 10; i++) {
+for (let index = 0; index < 10; index++) {
   draughts = draughts.move(draughts.moves()[0]);
 }
 
