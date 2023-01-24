@@ -245,7 +245,7 @@ describe("black wins", () => {
 
   test("can win with move", () => {
     assert.equal(draughts.status(), Status.PLAYING);
-    console.table(draughts.moves().map(formatMove));
+
     draughts = draughts.move({
       origin: S[21],
       destination: S[12],
