@@ -1,0 +1,11 @@
+declare let S: Record<number, number>;
+export { S };
+export declare const WHITE_START: number;
+export declare const BLACK_START: number;
+export declare const KING_START: number;
+export declare const MASK_L3: number;
+export declare const MASK_L5: number;
+export declare const MASK_R3: number;
+export declare const MASK_R5: number;
+export declare const MASK_KING_WHITE: number;
+export declare const MASK_KING_BLACK: number;

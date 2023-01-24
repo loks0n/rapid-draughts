@@ -1,0 +1,31 @@
+import { Move, Player, Status } from "./types";
+export declare class Draughts {
+    readonly white: number;
+    readonly black: number;
+    readonly king: number;
+    readonly playerToMove: Player;
+    private readonly noPieces;
+    private readonly whiteKing;
+    private readonly blackKing;
+    private _moves;
+    constructor(white?: number, black?: number, king?: number, playerToMove?: Player);
+    move(move: Move): Draughts;
+    moves(): Move[];
+    status(): Status;
+    private _moveWhite;
+    private _moveBlack;
+    private _generateMoves;
+    private _generateJumps;
+    private _generateOriginMoves;
+    private _generateOriginMovesWhite;
+    private _generateOriginMovesBlack;
+    private _generateOriginJumps;
+    private _generateOriginJumpWhite;
+    private _generateOriginJumpBlack;
+    private _getJumpers;
+    private _getBlackJumpers;
+    private _getWhiteJumpers;
+    private _getMovers;
+    private _getBlackMovers;
+    private _getWhiteMovers;
+}

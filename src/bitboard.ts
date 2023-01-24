@@ -1,5 +1,3 @@
-import { Move } from "./draughts";
-
 /*
  *   Bitboard representation
  *   ----------------
@@ -22,50 +20,9 @@ for (let i = 1; i < 32; i++) {
 
 export { S };
 
-export function splitBits(v: number): number[] {
-  let split: number[] = [];
-
-  for (let i = 0; i < 32; i++) {
-    const bit = v & (1 << i);
-    if (bit) split.push(bit);
-  }
-
-  return split;
-}
-
-export function squareBit(v: number): string {
-  for (let i = 0; i < 32; i++) {
-    const bit = v & (1 << i);
-    if (bit) return `S[${i}]`;
-  }
-
-  return `-`;
-}
-
-export function splitAndSquares(v: number): string {
-  return splitBits(v)
-    .map((s) => squareBit(s))
-    .join(" | ");
-}
-
-export function countBits(v: number): number {
-  let count: number = 0;
-
-  for (let i = 0; i < 32; i++) {
-    const bit = v & (1 << i);
-    if (bit) count += 1;
-  }
-
-  return count;
-}
-
-export function moveToSquares(move: Move) {
-  return {
-    origin: splitAndSquares(move.origin),
-    destination: splitAndSquares(move.destination),
-    captures: splitAndSquares(move.captures),
-  };
-}
+export const WHITE_START: number = 0b00000000000000000000000011111111;
+export const BLACK_START: number = 0b11111111000000000000000000000000;
+export const KING_START: number = 0b00000000000000000000000000000000;
 
 export const MASK_L3 =
   S[1] |

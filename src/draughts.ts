@@ -1,28 +1,16 @@
 import {
-  countBits,
+  BLACK_START,
+  KING_START,
   MASK_KING_BLACK,
   MASK_KING_WHITE,
   MASK_L3,
   MASK_L5,
   MASK_R3,
   MASK_R5,
-  splitBits,
+  WHITE_START,
 } from "./bitboard";
-
-export enum Player {
-  WHITE,
-  BLACK,
-}
-
-export type Move = {
-  origin: number;
-  destination: number;
-  captures: number;
-};
-
-const WHITE_START: number = 0b00000000000000000000000011111111;
-const BLACK_START: number = 0b11111111000000000000000000000000;
-const KING_START: number = 0b00000000000000000000000000000000;
+import { getBitCount, getBitSplitArray } from "./helpers";
+import { Move, Player, Status } from "./types";
 
 export class Draughts {
   readonly white: number;
@@ -38,14 +26,14 @@ export class Draughts {
   private _moves: Move[] | null = null;
 
   constructor(
-    w = WHITE_START,
-    b = BLACK_START,
-    k = KING_START,
+    white = WHITE_START,
+    black = BLACK_START,
+    king = KING_START,
     playerToMove: Player = Player.WHITE
   ) {
-    this.white = w;
-    this.black = b;
-    this.king = k;
+    this.white = white;
+    this.black = black;
+    this.king = king;
 
     this.playerToMove = playerToMove;
 
@@ -85,6 +73,15 @@ export class Draughts {
     return this._moves;
   }
 
+  status(): Status {
+    if (this.moves().length === 0) {
+      return this.playerToMove === Player.WHITE
+        ? Status.BLACK_WON
+        : Status.WHITE_WON;
+    }
+    return Status.PLAYING;
+  }
+
   private _moveWhite(move: Move): Draughts {
     // Remove origin piece from white and kings
     const isKing = move.origin & this.king;
@@ -121,7 +118,7 @@ export class Draughts {
 
   private _generateMoves(movers: number): Move[] {
     let generated: Move[] = [];
-    const moversSplit: number[] = splitBits(movers);
+    const moversSplit: number[] = getBitSplitArray(movers);
 
     for (const movers of moversSplit) {
       generated = generated.concat(this._generateOriginMoves(movers));
@@ -132,12 +129,12 @@ export class Draughts {
   private _generateJumps(jumpers: number): Move[] {
     let generated: Move[] = [];
     let captureRecord = 0;
-    const jumpersSplit: number[] = splitBits(jumpers);
+    const jumpersSplit: number[] = getBitSplitArray(jumpers);
 
     for (const jumper of jumpersSplit) {
       for (const jumpMove of this._generateOriginJumps(jumper)) {
         // Count the number of captures in the move
-        const captureCount = countBits(jumpMove.captures);
+        const captureCount = getBitCount(jumpMove.captures);
 
         // If the capture count is bigger this is a forced move
         if (captureCount > captureRecord) {
@@ -295,13 +292,13 @@ export class Draughts {
     let moves: Move[] = [];
 
     const c1 = (origin >> 4) & this.white;
-    const d1 = ((c1 & MASK_R3) >> 3) | (((c1 & MASK_R5) >> 5) & this.noPieces);
+    const d1 = (((c1 & MASK_R3) >> 3) | ((c1 & MASK_R5) >> 5)) & this.noPieces;
     if (d1) {
       moves.push({ origin, destination: d1, captures: c1 });
     }
 
     const c2 =
-      ((origin & MASK_R3) >> 3) | (((origin & MASK_R5) >> 5) & this.white);
+      (((origin & MASK_R3) >> 3) | ((origin & MASK_R5) >> 5)) & this.white;
     const d2 = (c2 >> 4) & this.noPieces;
     if (d2) {
       moves.push({ origin, destination: d2, captures: c2 });
