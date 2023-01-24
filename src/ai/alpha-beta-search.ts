@@ -1,5 +1,4 @@
 import { Draughts } from '../core/draughts';
-import { Status } from '../core/types';
 import { quiescenceSearch } from './quiescence-search';
 
 export function alphaBetaMove(draughts: Draughts, depth: number) {
@@ -29,8 +28,7 @@ function alphaBetaSearch(
   alpha: number,
   beta: number
 ) {
-  if (depth === 0 || draughts.status() !== Status.PLAYING)
-    return quiescenceSearch(draughts, alpha, beta);
+  if (depth === 0) return quiescenceSearch(draughts, alpha, beta);
 
   for (const move of draughts.moves()) {
     const next = draughts.move(move);

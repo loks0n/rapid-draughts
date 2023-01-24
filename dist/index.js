@@ -169,8 +169,8 @@ class M {
     if (_ && i.push({ origin: t, destination: _, captures: h }), e) {
       const a = t >> 4 & this.black, k = ((a & l) >> 3 | (a & f) >> 5) & this.noPieces;
       k && i.push({ origin: t, destination: k, captures: a });
-      const P = ((t & l) >> 3 | (t & f) >> 5) & this.black, T = P >> 4 & this.noPieces;
-      T && i.push({ origin: t, destination: T, captures: P });
+      const T = ((t & l) >> 3 | (t & f) >> 5) & this.black, P = T >> 4 & this.noPieces;
+      P && i.push({ origin: t, destination: P, captures: T });
     }
     return i;
   }
@@ -181,8 +181,8 @@ class M {
     if (_ && i.push({ origin: t, destination: _, captures: h }), e) {
       const a = t << 4 & this.white, k = ((a & u) << 3 | (a & p) << 5) & this.noPieces;
       k && i.push({ origin: t, destination: k, captures: a });
-      const P = ((t & u) << 3 | (t & p) << 5) & this.white, T = P << 4 & this.noPieces;
-      T && i.push({ origin: t, destination: T, captures: P });
+      const T = ((t & u) << 3 | (t & p) << 5) & this.white, P = T << 4 & this.noPieces;
+      P && i.push({ origin: t, destination: P, captures: T });
     }
     return i;
   }
@@ -213,17 +213,17 @@ const y = {
   [d.WHITE_WON]: r.WHITE,
   [d.BLACK_WON]: r.BLACK
 };
-function L(s) {
-  const t = s.status();
-  return t !== d.PLAYING ? s.playerToMove === y[t] ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY : J(s);
-}
 function J(s) {
+  const t = s.status();
+  return t !== d.PLAYING ? s.playerToMove === y[t] ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY : L(s);
+}
+function L(s) {
   const t = s.playerToMove === r.WHITE ? s.white : s.black, e = s.playerToMove === r.WHITE ? s.black : s.white;
   let i = 0;
   return i += m(t), i += m(t & s.king), i -= m(e), i -= m(e & s.king), i;
 }
 function K(s, t, e) {
-  const i = L(s);
+  const i = J(s);
   if (i >= e)
     return e;
   t = Math.max(i, t);
@@ -251,7 +251,7 @@ function x(s, t) {
   return i;
 }
 function w(s, t, e, i) {
-  if (t === 0 || s.status() !== d.PLAYING)
+  if (t === 0)
     return K(s, e, i);
   for (const o of s.moves()) {
     const c = s.move(o), h = -w(c, t - 1, -i, -e);
