@@ -9,5 +9,5 @@ for (let index = 0; index < 10; index++) {
 }
 
 // Show the bitboard result
-const { white, black, king } = draughts;
+const { white, black, king } = draughts.bitboard;
 console.table({ white, black, king });
