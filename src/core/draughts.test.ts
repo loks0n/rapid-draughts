@@ -1,12 +1,15 @@
 import { test, assert, describe, beforeEach } from 'vitest';
 import { Draughts, S } from '../index';
+import { DraughtsBitboard } from './bitboard';
 import { Player, Status } from './types';
 
 describe('simple capture', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[13], S[18] | S[28]);
+    bitboard = new DraughtsBitboard(S[13], S[18] | S[28]);
+    draughts = new Draughts(bitboard);
   });
 
   test('correct moves', () => {
@@ -27,10 +30,12 @@ describe('simple capture', () => {
 });
 
 describe('double capture', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[0], S[4] | S[13]);
+    bitboard = new DraughtsBitboard(S[0], S[4] | S[13]);
+    draughts = new Draughts(bitboard);
   });
 
   test('correct moves', () => {
@@ -41,10 +46,12 @@ describe('double capture', () => {
 });
 
 describe('king capture', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[4], S[9] | S[3], S[4]);
+    bitboard = new DraughtsBitboard(S[4], S[9] | S[3], S[4]);
+    draughts = new Draughts(bitboard);
   });
 
   test('correct moves', () => {
@@ -62,17 +69,19 @@ describe('king capture', () => {
       });
     });
 
-    assert.equal(draughts.white, S[13]);
-    assert.equal(draughts.black, S[3]);
-    assert.equal(draughts.king, S[13]);
+    assert.equal(draughts.bitboard.white, S[13]);
+    assert.equal(draughts.bitboard.black, S[3]);
+    assert.equal(draughts.bitboard.king, S[13]);
   });
 });
 
 describe('king backwards capture', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[18], S[13] | S[3], S[18]);
+    bitboard = new DraughtsBitboard(S[18], S[13] | S[3], S[18]);
+    draughts = new Draughts(bitboard);
   });
 
   test('correct moves', () => {
@@ -90,18 +99,20 @@ describe('king backwards capture', () => {
       });
     });
 
-    assert.equal(draughts.white, S[9]);
-    assert.equal(draughts.black, S[3]);
-    assert.equal(draughts.king, S[9]);
+    assert.equal(draughts.bitboard.white, S[9]);
+    assert.equal(draughts.bitboard.black, S[3]);
+    assert.equal(draughts.bitboard.king, S[9]);
   });
 });
 
 describe('make king', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[24], S[17]);
-    assert.equal(draughts.king, 0);
+    bitboard = new DraughtsBitboard(S[24], S[17]);
+    draughts = new Draughts(bitboard);
+    assert.equal(draughts.bitboard.king, 0);
   });
 
   test('king is made', () => {
@@ -110,15 +121,17 @@ describe('make king', () => {
       destination: S[28],
       captures: 0,
     });
-    assert.equal(draughts.king, S[28]);
+    assert.equal(draughts.bitboard.king, S[28]);
   });
 });
 
 describe('white wins', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[17], S[21]);
+    bitboard = new DraughtsBitboard(S[17], S[21]);
+    draughts = new Draughts(bitboard);
   });
 
   test('can win with move', () => {
@@ -135,10 +148,12 @@ describe('white wins', () => {
 });
 
 describe('black wins', () => {
+  let bitboard: DraughtsBitboard;
   let draughts: Draughts;
 
   beforeEach(() => {
-    draughts = new Draughts(S[17], S[21], 0, Player.BLACK);
+    bitboard = new DraughtsBitboard(S[17], S[21], 0);
+    draughts = new Draughts(bitboard, Player.BLACK);
   });
 
   test('can win with move', () => {

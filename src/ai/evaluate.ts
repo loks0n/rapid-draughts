@@ -21,16 +21,20 @@ export function evaluate(draughts: Draughts) {
 
 function evaluateMiddlegame(draughts: Draughts): number {
   const player =
-    draughts.playerToMove === Player.WHITE ? draughts.white : draughts.black;
+    draughts.playerToMove === Player.WHITE
+      ? draughts.bitboard.white
+      : draughts.bitboard.black;
   const opponent =
-    draughts.playerToMove === Player.WHITE ? draughts.black : draughts.white;
+    draughts.playerToMove === Player.WHITE
+      ? draughts.bitboard.black
+      : draughts.bitboard.white;
 
   let evaluation = 0;
 
   evaluation += getBitCount(player);
-  evaluation += getBitCount(player & draughts.king);
+  evaluation += getBitCount(player & draughts.bitboard.king);
   evaluation -= getBitCount(opponent);
-  evaluation -= getBitCount(opponent & draughts.king);
+  evaluation -= getBitCount(opponent & draughts.bitboard.king);
 
   return evaluation;
 }
