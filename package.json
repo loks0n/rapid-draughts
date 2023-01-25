@@ -25,7 +25,8 @@
     "build": "tsc && vite build",
     "examples:basic": "vite-node examples/basic.ts",
     "examples:capture": "vite-node examples/capture.ts",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint src/ && prettier --check src/",
     "coverage": "vitest run --coverage",
     "release": "release-it"
