@@ -20,6 +20,7 @@
     "require": "./dist/index.umd.cjs"
   },
   "scripts": {
+    "prepare": "npm run build",
     "prepublishOnly": "publint",
     "build": "tsc && vite build",
     "examples:basic": "vite-node examples/basic.ts",
