@@ -7,7 +7,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:unicorn/all',
+    'plugin:unicorn/recommended',
     'eslint-config-prettier',
   ],
   overrides: [],
