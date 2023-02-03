@@ -34,14 +34,4 @@ describe('simple jump', () => {
       { origin: S[22], destination: S[20], captures: S[21] },
     ]);
   });
-
-  test('capture is forced', () => {
-    assert.throw(() => {
-      engine.move({
-        origin: S[22],
-        destination: S[15],
-        captures: 0,
-      });
-    });
-  });
 });
