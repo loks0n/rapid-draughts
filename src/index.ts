@@ -1,5 +1,4 @@
-export { Draughts } from './core/draughts';
-export { S, DraughtsBitboard } from './core/bitboard';
+export { Player, Status } from './types';
+export type { Square2D, Square2DRef, Board2D, Move2D } from './types';
 
-export * as Helpers from './core/helpers';
-export * as AI from './ai';
+export * as EnglishDraughts from './english';

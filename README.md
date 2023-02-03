@@ -2,7 +2,7 @@
 
 **rapid-draughts** is a *super speedy, blazing fast, rocket-powered* 8x8 board TypeScript draughts/checkers engine.
 
-It uses bitboards, a board representation that holds the draughts board in three 32 bit unsigned integers. One for the white pieces, black pieces and the king pieces.
+It uses bitboards, a board representation that holds the draughts board in three 32 bit unsigned integers. One for the light pieces, dark pieces and the king pieces.
 
 Bitboards enable fast move generation and have minimal memory usage.
 
@@ -11,18 +11,20 @@ The engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).
 ## How to use
 
 ```typescript
-import { Draughts } from 'rapid-draughts';
+import { EnglishDraughts } from 'rapid-draughts';
 
-// Initialise the board
-let draughts = new Draughts();
+// Start a game
+let draughts = new EnglishDraughts();
+console.log(draughts.toString());
 
-// Play 10 moves
-for (let i = 0; i < 10; i++) {
-  draughts = draughts.move(draughts.moves()[0]);
-}
+// Output the current player
+console.log(draughts.player() === Player.WHI)
 
-// Show the bitboard result
-const { white, black, king } = draughts;
-console.table({ white, black, king });
+// Show the moves
+const moves = draughts.moves();
+console.table(moves);
+
+// Make a move
+draughts = draughts.move(moves[0]);
+console.log(draughts.toString());
 ```
-

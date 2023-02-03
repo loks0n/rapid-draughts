@@ -24,7 +24,6 @@
     "prepublishOnly": "publint",
     "build": "tsc && vite build",
     "examples:basic": "vite-node examples/basic.ts",
-    "examples:capture": "vite-node examples/capture.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src/ && prettier --check src/",
@@ -45,5 +44,8 @@
     "vite-node": "^0.28.1",
     "vite-plugin-dts": "^1.7.1",
     "vitest": "^0.28.1"
+  },
+  "dependencies": {
+    "long": "^5.2.1"
   }
 }

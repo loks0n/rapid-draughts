@@ -1,13 +1,20 @@
-import { Draughts } from '../src';
+import { EnglishDraughts, Player, Status } from '../src';
 
-// Initialise the board
-let draughts = new Draughts();
+// Initialise the game
+const { engine, draughts } = EnglishDraughts.setup();
 
-// Play 10 moves
-for (let index = 0; index < 10; index++) {
-  draughts = draughts.move(draughts.moves()[0]);
+// Initialise two AIs
+const weakAI = EnglishDraughts.AI.alphaBeta({ maxDepth: 4, quiescence: false });
+const strongAI = EnglishDraughts.AI.alphaBeta({ maxDepth: 6 });
+
+// Play until there is a winner
+while (draughts.status() === Status.PLAYING) {
+  console.log(draughts.toString());
+  const move =
+    draughts.player() === Player.LIGHT ? weakAI(engine) : strongAI(engine);
+  if (move) engine.move(move);
 }
 
-// Show the bitboard result
-const { white, black, king } = draughts.bitboard;
-console.table({ white, black, king });
+// Announce the winner
+console.log(draughts.toString());
+console.log(`result = ${draughts.status()}`);

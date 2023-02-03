@@ -17,5 +17,5 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
-  rules: {},
+  rules: { 'unicorn/prevent-abbreviations': 'off' },
 };
