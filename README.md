@@ -11,20 +11,29 @@ The engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).
 ## How to use
 
 ```typescript
-import { EnglishDraughts } from 'rapid-draughts';
+import { EnglishDraughts, Player, Status } from 'rapid-draughts';
 
-// Start a game
-let draughts = new EnglishDraughts();
-console.log(draughts.toString());
+// Initialise the game
+const { engine, draughts } = EnglishDraughts.setup();
 
-// Output the current player
-console.log(draughts.player() === Player.WHI)
-
-// Show the moves
+// Show the available moves and play one.
 const moves = draughts.moves();
-console.table(moves);
+draughts.move(moves[0]);
 
-// Make a move
-draughts = draughts.move(moves[0]);
+// Initialise two AIs
+const weakAI = EnglishDraughts.AI.alphaBeta({ maxDepth: 4, quiescence: false });
+const strongAI = EnglishDraughts.AI.alphaBeta({ maxDepth: 6 });
+
+// Play with the AIs until there is a winner
+while (draughts.status() === Status.PLAYING) {
+  console.log(draughts.toString());
+  const move =
+    draughts.player() === Player.LIGHT ? weakAI(engine) : strongAI(engine);
+  if (move) engine.move(move);
+}
+
+// Announce the winner
 console.log(draughts.toString());
+console.log(`result = ${draughts.status()}`);
+
 ```
