@@ -29,12 +29,17 @@ const BIT_MASK = 2 ** BITS - 1;
 
 export function rotRight(value: number, r: number): number {
   const rotation = r & (BITS - 1);
-  return (value >>> rotation) | ((value << (BITS - rotation)) & BIT_MASK);
+  const applied =
+    (value >>> rotation) | ((value << (BITS - rotation)) & BIT_MASK);
+  return applied >>> 0;
 }
 
 export function rotLeft(value: number, r: number): number {
   const rotation = r & (BITS - 1);
-  return ((value << rotation) & BIT_MASK) | (value >>> (BITS - rotation));
+
+  const applied =
+    ((value << rotation) & BIT_MASK) | (value >>> (BITS - rotation));
+  return applied >>> 0;
 }
 
 export function splitBits(value: number): number[] {

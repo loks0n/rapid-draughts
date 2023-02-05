@@ -186,8 +186,9 @@ export class EnglishDraughtsEngine implements IDraughtsEngine<number> {
     const moves: Move<number>[] = [];
 
     if (origin & player.forward) {
+      // WANRING: Requires 0 shift to treat S[31] square as unsigned
       const c1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & player.opponent;
-      const d1 = rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.empty;
+      const d1 = (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
       if (d1) {
         moves.push({ origin, destination: d1, captures: c1 });
       }

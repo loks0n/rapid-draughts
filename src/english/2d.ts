@@ -21,7 +21,7 @@ const ENGLISH_DRAUGHTS_LAYOUT = [
 ];
 
 const SQUARE_TO_REF: Record<number, Square2DRef> = {};
-for (const [rankIndex, rank] of ENGLISH_DRAUGHTS_LAYOUT.reverse().entries()) {
+for (const [rankIndex, rank] of ENGLISH_DRAUGHTS_LAYOUT.entries()) {
   for (const [fileIndex, square] of rank.entries()) {
     if (square === undefined) continue;
     SQUARE_TO_REF[square] = { rank: rankIndex, file: fileIndex };
