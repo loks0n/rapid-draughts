@@ -19,7 +19,7 @@ jobs:
     - name: Test
       uses: actions/setup-node@v3
       with:
-        node-version: latest
+        node-version: 19.6.1
         cache: 'npm'
     - run: npm ci
     - run: npm test
