@@ -1,8 +1,17 @@
-import { Board, IDraughtsEngine, Move, Player, Status } from '../types';
+import {
+  Board,
+  IDraughtsBoard,
+  IDraughtsState,
+  Move,
+  Player,
+  Status,
+} from '../types';
 import * as Mask from './mask';
 import { rotLeft, rotRight, splitBits } from './utils';
 
-export class EnglishDraughtsEngine implements IDraughtsEngine<number> {
+export class EnglishDraughtsEngine
+  implements IDraughtsBoard<number>, IDraughtsState
+{
   board: Board<number>;
   playerToMove: Player;
 
@@ -34,7 +43,15 @@ export class EnglishDraughtsEngine implements IDraughtsEngine<number> {
     this.darkKing = board.dark & board.king;
   }
 
-  copy() {
+  serialize() {
+    return {
+      board: { ...this.board },
+      playerToMove: this.playerToMove,
+      cache: { ...this.cache },
+    };
+  }
+
+  clone() {
     return new EnglishDraughtsEngine({
       board: { ...this.board },
       playerToMove: this.playerToMove,

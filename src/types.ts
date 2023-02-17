@@ -16,7 +16,7 @@ export enum Status {
 
 // Engine types
 
-type Bitboard = number | Long;
+export type Bitboard = number | Long;
 
 export type Board<T extends Bitboard> = {
   light: T;
@@ -30,14 +30,24 @@ export type Move<T extends Bitboard> = {
   captures: T;
 };
 
-export interface IDraughtsEngine<T extends Bitboard> {
+export interface IDraughtsBoard<T extends Bitboard> {
   board: Board<T>;
-  playerToMove: Player;
-  status(): Status;
   moves(): Move<T>[];
   move(move: Move<T>): void;
-  copy(): IDraughtsEngine<T>;
 }
+
+export interface IDraughtsState {
+  playerToMove: Player;
+  status(): Status;
+}
+
+export interface ICloneable {
+  clone(): this;
+}
+
+export type IDraughtsEngine<T extends Bitboard> = IDraughtsBoard<T> &
+  IDraughtsState &
+  ICloneable;
 
 // 1D Types
 

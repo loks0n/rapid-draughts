@@ -1,3 +1,5 @@
+import Long from 'long';
+
 const BITS = 32;
 
 const S: Record<number, number> = [];
@@ -51,7 +53,14 @@ export function splitBits(value: number): number[] {
   return split;
 }
 
-export function cardinality(value: number): number {
+export function cardinality(value: number | Long): number {
+  if (typeof value !== 'number') {
+    return (
+      cardinality(value.getHighBitsUnsigned()) +
+      cardinality(value.getLowBitsUnsigned())
+    );
+  }
+
   let count = 0;
   for (let index = 0; index < BITS; index++) {
     if (value & (1 << index)) count += 1;

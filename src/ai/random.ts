@@ -1,8 +1,8 @@
-import { IDraughtsEngine } from '../../types';
-import { EnglishDraughtsAI } from './types';
+import { Bitboard, IDraughtsEngine } from '../types';
+import { DraughtsAI } from './types';
 
-export function random(): EnglishDraughtsAI {
-  return (engine: IDraughtsEngine<number>) => {
+export function random<T extends Bitboard>(): DraughtsAI<T> {
+  return (engine: IDraughtsEngine<T>) => {
     const moves = engine.moves();
 
     if (moves.length === 0) {

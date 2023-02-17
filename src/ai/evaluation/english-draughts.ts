@@ -1,13 +1,13 @@
-import { cardinality } from '../utils';
 import { IDraughtsEngine, Player, Status } from '../../types';
-import * as Mask from '../mask';
+import { cardinality } from '../../english/utils';
+import * as Mask from '../../english/mask';
 
 const statusToPlayer = {
   [Status.LIGHT_WON]: Player.LIGHT,
   [Status.DARK_WON]: Player.DARK,
 };
 
-export function englishDraughtsEvaluation(engine: IDraughtsEngine<number>) {
+export function englishDraughts(engine: IDraughtsEngine<number>) {
   const status = engine.status();
   if (status !== Status.PLAYING) {
     if (status === Status.DRAW) return Number.NEGATIVE_INFINITY;

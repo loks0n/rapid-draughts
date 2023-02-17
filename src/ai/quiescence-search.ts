@@ -1,21 +1,21 @@
-import { cardinality } from '../utils';
-import { IDraughtsEngine } from '../../types';
+import { cardinality } from '../english/utils';
+import { Bitboard, IDraughtsEngine } from '../types';
 
-export interface QuiescenceSearchArguments {
+export interface QuiescenceSearchArguments<T extends Bitboard> {
   data: {
-    engine: IDraughtsEngine<number>;
+    engine: IDraughtsEngine<T>;
     alpha: number;
     beta: number;
   };
   options: {
-    evaluateFn: (engine: IDraughtsEngine<number>) => number;
+    evaluateFn: (engine: IDraughtsEngine<T>) => number;
   };
 }
 
-export function quiescenceSearch({
+export function quiescenceSearch<T extends Bitboard>({
   data: { engine, alpha, beta },
   options: { evaluateFn },
-}: QuiescenceSearchArguments) {
+}: QuiescenceSearchArguments<T>) {
   const evaluation = evaluateFn(engine);
   if (evaluation >= beta) return beta;
   alpha = Math.max(evaluation, alpha);
@@ -23,7 +23,7 @@ export function quiescenceSearch({
   for (const move of engine.moves()) {
     if (cardinality(move.captures) === 0) continue;
 
-    const next = engine.copy();
+    const next = engine.clone();
     next.move(move);
 
     const nextEvaluation = -quiescenceSearch({

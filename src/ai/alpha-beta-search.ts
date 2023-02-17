@@ -1,29 +1,41 @@
-import { Move, IDraughtsEngine } from '../../types';
-import { englishDraughtsEvaluation } from './evaluate';
+import { Bitboard, IDraughtsEngine, Move } from '../types';
 import { quiescenceSearch } from './quiescence-search';
-import { EnglishDraughtsAI } from './types';
+import { DraughtsAI } from './types';
 
-export type AlphaBetaEvaluationFunction = (
-  engine: IDraughtsEngine<number>
+export type AlphaBetaEvaluationFunction<T extends Bitboard> = (
+  engine: IDraughtsEngine<T>
 ) => number;
 
-export interface AlphaBetaArguments {
+export interface AlphaBetaArguments<T extends Bitboard> {
   maxDepth: number;
-  evaluateFn?: AlphaBetaEvaluationFunction;
+  evaluateFn: AlphaBetaEvaluationFunction<T>;
   quiescence?: boolean;
 }
 
-export function alphaBeta({
+export type AlphaBetaSearchArguments<T extends Bitboard> = {
+  data: {
+    engine: IDraughtsEngine<T>;
+    alpha: number;
+    beta: number;
+    depth: number;
+  };
+  options: {
+    evaluateFn: AlphaBetaEvaluationFunction<T>;
+    quiescence: boolean;
+  };
+};
+
+export function alphaBeta<T extends Bitboard>({
   maxDepth,
-  evaluateFn = englishDraughtsEvaluation,
+  evaluateFn,
   quiescence = true,
-}: AlphaBetaArguments): EnglishDraughtsAI {
-  return (engine: IDraughtsEngine<number>) => {
+}: AlphaBetaArguments<T>): DraughtsAI<T> {
+  return (engine: IDraughtsEngine<T>) => {
     let recordEvaluation = Number.NEGATIVE_INFINITY;
-    let recordMove: Move<number> | undefined;
+    let recordMove: Move<T> | undefined;
 
     for (const move of engine.moves()) {
-      const next = engine.copy();
+      const next = engine.clone();
       next.move(move);
 
       const evaluation = -alphaBetaSearch({
@@ -48,23 +60,10 @@ export function alphaBeta({
   };
 }
 
-type AlphaBetaSearchArguments = {
-  data: {
-    engine: IDraughtsEngine<number>;
-    alpha: number;
-    beta: number;
-    depth: number;
-  };
-  options: {
-    evaluateFn: AlphaBetaEvaluationFunction;
-    quiescence: boolean;
-  };
-};
-
-function alphaBetaSearch({
+function alphaBetaSearch<T extends Bitboard>({
   data: { engine, alpha, beta, depth },
   options: { evaluateFn, quiescence },
-}: AlphaBetaSearchArguments) {
+}: AlphaBetaSearchArguments<T>) {
   if (depth === 0)
     return quiescence
       ? quiescenceSearch({
@@ -74,7 +73,7 @@ function alphaBetaSearch({
       : evaluateFn(engine);
 
   for (const move of engine.moves()) {
-    const next = engine.copy();
+    const next = engine.clone();
     next.move(move);
 
     const evaluation = -alphaBetaSearch({
