@@ -39,31 +39,28 @@ export interface IDraughtsEngine<T extends Bitboard> {
   copy(): IDraughtsEngine<T>;
 }
 
-// 2D Types
+// 1D Types
 
-export type Square2D = {
+export type Square1D = {
   player: Player;
   king: boolean;
 };
 
-export type Board2D = (Square2D | undefined)[][];
+export type Board1D = (Square1D | undefined)[];
 
-export type Square2DRef = {
-  rank: number;
-  file: number;
+export type Square1DRef = number;
+
+export type Move1D = {
+  origin: Square1DRef;
+  destination: Square1DRef;
+  captures: Square1DRef[];
 };
 
-export type Move2D = {
-  origin: Square2DRef;
-  destination: Square2DRef;
-  captures: Square2DRef[];
-};
-
-export interface IDraughts2D {
+export interface IDraughts1D {
   toString(): string;
   player(): Player;
   status(): Status;
-  board(): Board2D;
-  moves(): Move2D[];
-  move(move: Move2D): void;
+  board(): Board1D;
+  moves(): Move1D[];
+  move(move: Move1D): void;
 }

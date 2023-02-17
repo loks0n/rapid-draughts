@@ -1,7 +1,8 @@
 import { EnglishDraughts, Player, Status } from '../src';
 
 // Initialise the game
-const { engine, draughts } = EnglishDraughts.setup();
+const engine = new EnglishDraughts.Engine();
+const draughts = new EnglishDraughts.Draughts1D(engine);
 
 // Show the available moves and play one.
 const moves = draughts.moves();

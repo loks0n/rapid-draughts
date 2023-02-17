@@ -1,4 +1,4 @@
 export { Player, Status } from './types';
-export type { Square2D, Square2DRef, Board2D, Move2D } from './types';
+export type { Square1D, Square1DRef, Board1D, Move1D } from './types';
 
 export * as EnglishDraughts from './english';
