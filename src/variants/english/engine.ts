@@ -3,7 +3,6 @@ import {
   DraughtsEngineMove,
   DraughtsPlayer,
   DraughtsStatus,
-  IDraughtsGameAdapter1D,
 } from '../../types';
 import { togglePlayer } from '../utils';
 import { EnglishDraughtsAdapter1D } from './adapter';
