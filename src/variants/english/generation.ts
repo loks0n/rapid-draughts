@@ -4,220 +4,194 @@ import {
   DraughtsPlayer,
 } from '../../types';
 import * as Mask from './mask';
-import {
-  EnglishDraughtsBoardIntermediates,
-  EnglishDraughtsDrawCounter,
-} from './types';
 import { rotLeft, rotRight } from './utils';
 
-export function generateIntermediates(
-  player: DraughtsPlayer,
-  board: DraughtsEngineBoard<number>
-): EnglishDraughtsBoardIntermediates {
-  return {
-    forward:
-      player === DraughtsPlayer.LIGHT ? board.light : board.dark & board.king,
-    backward:
-      player === DraughtsPlayer.LIGHT ? board.light & board.king : board.dark,
-    opponent: player === DraughtsPlayer.LIGHT ? board.dark : board.light,
-    empty: ~(board.light | board.dark),
-  };
-}
+export type EnglishDraughtsBoardIntermediates = {
+  forward: number;
+  backward: number;
+  opponent: number;
+  empty: number;
+};
 
-function generateMoveIntermediates(
-  board: EnglishDraughtsBoardIntermediates,
-  move: DraughtsEngineMove<number>
-): EnglishDraughtsBoardIntermediates {
-  return {
-    forward:
-      board.forward & move.origin
-        ? board.forward | move.destination
-        : board.forward,
-    backward:
-      board.backward & move.origin
-        ? board.backward | move.destination
-        : board.backward,
-    opponent: board.opponent & ~move.captures,
-    empty: board.empty,
-  };
-}
+export class EnglishDraughtsMoveGenerator {
+  private forward: number;
+  private backward: number;
+  private opponent: number;
+  private empty: number;
 
-export function applyMove(
-  board: DraughtsEngineBoard<number>,
-  drawCounters: EnglishDraughtsDrawCounter,
-  move: DraughtsEngineMove<number>
-): {
-  board: DraughtsEngineBoard<number>;
-  drawCounters: EnglishDraughtsDrawCounter;
-} {
-  const newBoard = {
-    ...board,
-  };
-
-  newBoard.light &= ~(move.origin | move.captures);
-  newBoard.dark &= ~(move.origin | move.captures);
-  newBoard.king &= ~(move.origin | move.captures);
-
-  if (board.light & move.origin) {
-    newBoard.light |= move.destination;
-    newBoard.king |= move.destination & Mask.RANK_7;
-  } else {
-    newBoard.dark |= move.destination;
-    newBoard.king |= move.destination & Mask.RANK_0;
+  constructor(args: {
+    forward: number;
+    backward: number;
+    opponent: number;
+    empty: number;
+  }) {
+    this.forward = args.forward;
+    this.backward = args.backward;
+    this.opponent = args.opponent;
+    this.empty = args.empty;
   }
 
-  const newDrawCounters = { ...drawCounters };
+  static fromPlayerAndBoard(
+    player: DraughtsPlayer,
+    board: DraughtsEngineBoard<number>
+  ) {
+    const forward =
+      player === DraughtsPlayer.LIGHT ? board.light : board.dark & board.king;
+    const backward =
+      player === DraughtsPlayer.LIGHT ? board.light & board.king : board.dark;
+    const opponent = player === DraughtsPlayer.LIGHT ? board.dark : board.light;
+    const empty = ~(board.light | board.dark);
 
-  if (board.king & move.origin) {
-    newBoard.king |= move.destination;
-    newDrawCounters.sinceUncrownedAdvance += 1;
-  } else {
-    newDrawCounters.sinceUncrownedAdvance = 0;
-  }
-
-  if (move.captures) {
-    newDrawCounters.sinceCapture = 0;
-  } else {
-    newDrawCounters.sinceCapture += 1;
-  }
-
-  return { board: newBoard, drawCounters: newDrawCounters };
-}
-
-export function getJumpers(board: EnglishDraughtsBoardIntermediates): number {
-  let capture = rotRight(board.empty, 7) & (board.opponent & Mask.FORWARD_LEFT);
-  let jumpers = rotRight(capture, 7) & (board.forward & Mask.FORWARD_LEFT);
-
-  capture = rotRight(board.empty, 1) & (board.opponent & Mask.FORWARD_RIGHT);
-  jumpers |= rotRight(capture, 1) & (board.forward & Mask.FORWARD_RIGHT);
-
-  capture = rotLeft(board.empty, 1) & (board.opponent & Mask.BACKWARD_LEFT);
-  jumpers |= rotLeft(capture, 1) & (board.backward & Mask.BACKWARD_LEFT);
-
-  capture = rotLeft(board.empty, 7) & (board.opponent & Mask.BACKWARD_RIGHT);
-  jumpers |= rotLeft(capture, 7) & (board.backward & Mask.BACKWARD_RIGHT);
-
-  return jumpers;
-}
-
-export function getMultipleJumpsFromOrigin(
-  board: EnglishDraughtsBoardIntermediates,
-  origin: number
-) {
-  const searchStack = getSingleJumpFromOrigin(board, origin);
-  const moves: DraughtsEngineMove<number>[] = [];
-
-  while (searchStack.length > 0) {
-    const searchJump = searchStack.pop();
-    if (!searchJump) break;
-
-    const nextBoard = generateMoveIntermediates(board, {
-      ...searchJump,
-      origin,
+    return new EnglishDraughtsMoveGenerator({
+      forward,
+      backward,
+      opponent,
+      empty,
     });
+  }
 
-    const nextJumps = getSingleJumpFromOrigin(
-      nextBoard,
-      searchJump.destination
-    );
+  getJumpers(): number {
+    let capture = rotRight(this.empty, 7) & (this.opponent & Mask.FORWARD_LEFT);
+    let jumpers = rotRight(capture, 7) & (this.forward & Mask.FORWARD_LEFT);
 
-    for (const nextJump of nextJumps) {
-      searchStack.push({
+    capture = rotRight(this.empty, 1) & (this.opponent & Mask.FORWARD_RIGHT);
+    jumpers |= rotRight(capture, 1) & (this.forward & Mask.FORWARD_RIGHT);
+
+    capture = rotLeft(this.empty, 1) & (this.opponent & Mask.BACKWARD_LEFT);
+    jumpers |= rotLeft(capture, 1) & (this.backward & Mask.BACKWARD_LEFT);
+
+    capture = rotLeft(this.empty, 7) & (this.opponent & Mask.BACKWARD_RIGHT);
+    jumpers |= rotLeft(capture, 7) & (this.backward & Mask.BACKWARD_RIGHT);
+
+    return jumpers;
+  }
+
+  getMovers(): number {
+    let movers = 0;
+
+    if (this.forward) {
+      movers |= rotRight(this.empty, 7) & this.forward & Mask.FORWARD_LEFT;
+      movers |= rotRight(this.empty, 1) & this.forward & Mask.FORWARD_RIGHT;
+    }
+    if (this.backward) {
+      movers |= rotLeft(this.empty, 1) & this.backward & Mask.BACKWARD_LEFT;
+      movers |= rotLeft(this.empty, 7) & this.backward & Mask.BACKWARD_RIGHT;
+    }
+
+    return movers;
+  }
+
+  getMovesFromOrigin(origin: number): DraughtsEngineMove<number>[] {
+    const moves: DraughtsEngineMove<number>[] = [];
+
+    if (origin & this.forward) {
+      const d1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.empty;
+      if (d1) {
+        moves.push({ origin, destination: d1, captures: 0 });
+      }
+
+      const d2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.empty;
+      if (d2) {
+        moves.push({ origin, destination: d2, captures: 0 });
+      }
+    }
+
+    if (origin & this.backward) {
+      const d3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.empty;
+      if (d3) {
+        moves.push({ origin, destination: d3, captures: 0 });
+      }
+
+      const d4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.empty;
+      if (d4) {
+        moves.push({ origin, destination: d4, captures: 0 });
+      }
+    }
+
+    return moves;
+  }
+
+  getJumpsFromOrigin(origin: number) {
+    const searchStack = this.getSingleJumpFromOrigin(origin);
+    const moves: DraughtsEngineMove<number>[] = [];
+
+    while (searchStack.length > 0) {
+      const searchJump = searchStack.pop();
+      if (!searchJump) break;
+
+      const nextBoard = this._fromMove({
+        ...searchJump,
         origin,
-        destination: nextJump.destination,
-        captures: searchJump.captures | nextJump.captures,
       });
+
+      const nextJumps = nextBoard.getSingleJumpFromOrigin(
+        searchJump.destination
+      );
+
+      for (const nextJump of nextJumps) {
+        searchStack.push({
+          origin,
+          destination: nextJump.destination,
+          captures: searchJump.captures | nextJump.captures,
+        });
+      }
+
+      if (nextJumps.length === 0) moves.push(searchJump);
     }
 
-    if (nextJumps.length === 0) moves.push(searchJump);
+    return moves;
   }
 
-  return moves;
-}
+  getSingleJumpFromOrigin(origin: number): DraughtsEngineMove<number>[] {
+    const moves: DraughtsEngineMove<number>[] = [];
 
-function getSingleJumpFromOrigin(
-  board: EnglishDraughtsBoardIntermediates,
-  origin: number
-): DraughtsEngineMove<number>[] {
-  const moves: DraughtsEngineMove<number>[] = [];
+    if (origin & this.forward) {
+      const c1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.opponent;
+      // WARNING: Requires 0 fill shift to treat S[31] square as unsigned
+      const d1 = (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
+      if (d1) {
+        moves.push({ origin, destination: d1, captures: c1 });
+      }
 
-  if (origin & board.forward) {
-    const c1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & board.opponent;
-    // WARNING: Requires 0 fill shift to treat S[31] square as unsigned
-    const d1 = (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & board.empty) >>> 0;
-    if (d1) {
-      moves.push({ origin, destination: d1, captures: c1 });
+      const c2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.opponent;
+      // WARNING: Requires 0 fill shift to treat S[31] square as unsigned
+      const d2 = (rotLeft(c2 & Mask.FORWARD_RIGHT, 1) & this.empty) >>> 0;
+      if (d2) {
+        moves.push({ origin, destination: d2, captures: c2 });
+      }
     }
 
-    const c2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & board.opponent;
-    // WARNING: Requires 0 fill shift to treat S[31] square as unsigned
-    const d2 = (rotLeft(c2 & Mask.FORWARD_RIGHT, 1) & board.empty) >>> 0;
-    if (d2) {
-      moves.push({ origin, destination: d2, captures: c2 });
+    if (origin & this.backward) {
+      const c3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.opponent;
+      const d3 = rotRight(c3 & Mask.BACKWARD_LEFT, 1) & this.empty;
+      if (d3) {
+        moves.push({ origin, destination: d3, captures: c3 });
+      }
+
+      const c4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.opponent;
+      const d4 = rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & this.empty;
+      if (d4) {
+        moves.push({ origin, destination: d4, captures: c4 });
+      }
     }
+
+    return moves;
   }
 
-  if (origin & board.backward) {
-    const c3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & board.opponent;
-    const d3 = rotRight(c3 & Mask.BACKWARD_LEFT, 1) & board.empty;
-    if (d3) {
-      moves.push({ origin, destination: d3, captures: c3 });
-    }
-
-    const c4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & board.opponent;
-    const d4 = rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & board.empty;
-    if (d4) {
-      moves.push({ origin, destination: d4, captures: c4 });
-    }
+  private _fromMove(
+    move: DraughtsEngineMove<number>
+  ): EnglishDraughtsMoveGenerator {
+    return new EnglishDraughtsMoveGenerator({
+      forward:
+        this.forward & move.origin
+          ? this.forward | move.destination
+          : this.forward,
+      backward:
+        this.backward & move.origin
+          ? this.backward | move.destination
+          : this.backward,
+      opponent: this.opponent & ~move.captures,
+      empty: this.empty,
+    });
   }
-
-  return moves;
-}
-
-export function getMovers(board: EnglishDraughtsBoardIntermediates): number {
-  let movers = 0;
-
-  if (board.forward) {
-    movers |= rotRight(board.empty, 7) & board.forward & Mask.FORWARD_LEFT;
-    movers |= rotRight(board.empty, 1) & board.forward & Mask.FORWARD_RIGHT;
-  }
-  if (board.backward) {
-    movers |= rotLeft(board.empty, 1) & board.backward & Mask.BACKWARD_LEFT;
-    movers |= rotLeft(board.empty, 7) & board.backward & Mask.BACKWARD_RIGHT;
-  }
-
-  return movers;
-}
-
-export function getMovesFromOrigin(
-  board: EnglishDraughtsBoardIntermediates,
-  origin: number
-): DraughtsEngineMove<number>[] {
-  const moves: DraughtsEngineMove<number>[] = [];
-
-  if (origin & board.forward) {
-    const d1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & board.empty;
-    if (d1) {
-      moves.push({ origin, destination: d1, captures: 0 });
-    }
-
-    const d2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & board.empty;
-    if (d2) {
-      moves.push({ origin, destination: d2, captures: 0 });
-    }
-  }
-
-  if (origin & board.backward) {
-    const d3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & board.empty;
-    if (d3) {
-      moves.push({ origin, destination: d3, captures: 0 });
-    }
-
-    const d4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & board.empty;
-    if (d4) {
-      moves.push({ origin, destination: d4, captures: 0 });
-    }
-  }
-
-  return moves;
 }

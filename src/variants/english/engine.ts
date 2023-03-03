@@ -6,14 +6,7 @@ import {
 } from '../../types';
 import { togglePlayer } from '../utils';
 import { EnglishDraughtsAdapter1D } from './adapter';
-import {
-  applyMove,
-  generateIntermediates,
-  getJumpers,
-  getMovers,
-  getMovesFromOrigin,
-  getMultipleJumpsFromOrigin,
-} from './generation';
+import { EnglishDraughtsMoveGenerator } from './generation';
 
 import * as Mask from './mask';
 import {
@@ -46,6 +39,48 @@ const DEFAULT_CONFIG = {
     sinceUncrownedAdvance: 0,
   },
 };
+
+export function applyMove(
+  board: DraughtsEngineBoard<number>,
+  drawCounters: EnglishDraughtsDrawCounter,
+  move: DraughtsEngineMove<number>
+): {
+  board: DraughtsEngineBoard<number>;
+  drawCounters: EnglishDraughtsDrawCounter;
+} {
+  const dBoard = {
+    ...board,
+  };
+
+  dBoard.light &= ~(move.origin | move.captures);
+  dBoard.dark &= ~(move.origin | move.captures);
+  dBoard.king &= ~(move.origin | move.captures);
+
+  if (board.light & move.origin) {
+    dBoard.light |= move.destination;
+    dBoard.king |= move.destination & Mask.RANK_7;
+  } else {
+    dBoard.dark |= move.destination;
+    dBoard.king |= move.destination & Mask.RANK_0;
+  }
+
+  const dDrawCounters = { ...drawCounters };
+
+  if (board.king & move.origin) {
+    dBoard.king |= move.destination;
+    dDrawCounters.sinceUncrownedAdvance += 1;
+  } else {
+    dDrawCounters.sinceUncrownedAdvance = 0;
+  }
+
+  if (move.captures) {
+    dDrawCounters.sinceCapture = 0;
+  } else {
+    dDrawCounters.sinceCapture += 1;
+  }
+
+  return { board: dBoard, drawCounters: dDrawCounters };
+}
 
 export class EnglishDraughtsEngine implements IEnglishDraughtsEngine {
   player: DraughtsPlayer;
@@ -88,21 +123,24 @@ export class EnglishDraughtsEngine implements IEnglishDraughtsEngine {
   }
 
   private _initializeMoves(): DraughtsEngineMove<number>[] {
-    const intermediates = generateIntermediates(this.player, this.board);
+    const generator = EnglishDraughtsMoveGenerator.fromPlayerAndBoard(
+      this.player,
+      this.board
+    );
 
     const moves: DraughtsEngineMove<number>[] = [];
 
-    const jumpers = getJumpers(intermediates);
+    const jumpers = generator.getJumpers();
     if (jumpers) {
       for (const jumper of splitBits(jumpers)) {
-        moves.push(...getMultipleJumpsFromOrigin(intermediates, jumper));
+        moves.push(...generator.getJumpsFromOrigin(jumper));
       }
       return moves;
     }
 
-    const movers = getMovers(intermediates);
+    const movers = generator.getMovers();
     for (const mover of splitBits(movers)) {
-      moves.push(...getMovesFromOrigin(intermediates, mover));
+      moves.push(...generator.getMovesFromOrigin(mover));
     }
 
     return moves;
@@ -113,24 +151,18 @@ export class EnglishDraughtsEngine implements IEnglishDraughtsEngine {
       throw new Error('invalid move');
     }
 
-    this.player = togglePlayer(this.player);
-
     const { board, drawCounters } = applyMove(
       this.board,
       this.drawCounters,
       move
     );
 
-    this.board = board;
-    this.drawCounters = drawCounters;
+    (this.player = togglePlayer(this.player)),
+      (this.board = board),
+      (this.drawCounters = drawCounters);
 
-    this._wipeCache();
-  }
-
-  private _wipeCache() {
-    this._moves = undefined;
-    this._status = undefined;
-    this.adapter1D = new EnglishDraughtsAdapter1D(this);
+    // Reset the cached fields
+    (this._moves = undefined), (this._status = undefined);
   }
 
   serialize() {

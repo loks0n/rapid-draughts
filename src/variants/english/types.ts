@@ -22,10 +22,3 @@ export interface IEnglishDraughtsEngine
   drawCounters: EnglishDraughtsDrawCounter;
   serialize(): EnglishDraughtsEngineConfig;
 }
-
-export type EnglishDraughtsBoardIntermediates = {
-  forward: number;
-  backward: number;
-  opponent: number;
-  empty: number;
-};
