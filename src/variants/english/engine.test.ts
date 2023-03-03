@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, assert } from 'vitest';
-import { Player } from '../types';
+import { DraughtsPlayer } from '../../types';
 
 import { EnglishDraughtsEngine } from './engine';
 import { S } from './utils';
@@ -14,7 +14,7 @@ describe('simple move', () => {
   });
 
   test('correct moves', () => {
-    assert.sameDeepMembers(engine.moves(), [
+    assert.sameDeepMembers(engine.moves, [
       { origin: S[24], destination: S[23], captures: 0 },
       { origin: S[24], destination: S[17], captures: 0 },
     ]);
@@ -31,7 +31,7 @@ describe('simple jump', () => {
   });
 
   test('correct moves', () => {
-    assert.sameDeepMembers(engine.moves(), [
+    assert.sameDeepMembers(engine.moves, [
       { origin: S[22], destination: S[20], captures: S[21] },
     ]);
   });
@@ -43,12 +43,12 @@ describe('jump and become king', () => {
   beforeEach(() => {
     engine = new EnglishDraughtsEngine({
       board: { light: S[17], dark: S[24] | S[14], king: 0 },
-      playerToMove: Player.LIGHT,
+      player: DraughtsPlayer.LIGHT,
     });
   });
 
   test('correct moves', () => {
-    assert.sameDeepMembers(engine.moves(), [
+    assert.sameDeepMembers(engine.moves, [
       { origin: S[17], destination: S[31], captures: S[24] },
     ]);
   });

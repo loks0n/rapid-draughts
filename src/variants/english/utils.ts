@@ -1,5 +1,3 @@
-import Long from 'long';
-
 const BITS = 32;
 
 const S: Record<number, number> = [];
@@ -38,7 +36,6 @@ export function rotRight(value: number, r: number): number {
 
 export function rotLeft(value: number, r: number): number {
   const rotation = r & (BITS - 1);
-
   const applied =
     ((value << rotation) & BIT_MASK) | (value >>> (BITS - rotation));
   return applied >>> 0;
@@ -51,19 +48,4 @@ export function splitBits(value: number): number[] {
     if (bit) split.push(bit);
   }
   return split;
-}
-
-export function cardinality(value: number | Long): number {
-  if (typeof value !== 'number') {
-    return (
-      cardinality(value.getHighBitsUnsigned()) +
-      cardinality(value.getLowBitsUnsigned())
-    );
-  }
-
-  let count = 0;
-  for (let index = 0; index < BITS; index++) {
-    if (value & (1 << index)) count += 1;
-  }
-  return count;
 }

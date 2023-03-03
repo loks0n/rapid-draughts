@@ -1,29 +1,31 @@
-import { EnglishDraughts, Player, Status, AI, Evaluation } from '../src';
+import { AI, DraughtsPlayer, DraughtsStatus, EnglishDraughts } from '../src';
 
 // Initialise the game
-const engine = new EnglishDraughts.Engine();
-const draughts = new EnglishDraughts.Draughts1D(engine);
+const draughts = new EnglishDraughts();
 
 // Show the available moves and play one.
-const moves = draughts.moves();
-draughts.move(moves[0]);
+const { moves } = draughts.adapter1D;
+console.table(moves);
+draughts.adapter1D.move(moves[0]);
 
 // Initialise two AIs
-const weakAI = AI.random<number>();
-const strongAI = AI.alphaBeta<number>({
-  evaluateFn: Evaluation.englishDraughts,
+const weakAI = AI.random<EnglishDraughts>();
+const strongAI = AI.alphaBeta({
+  evaluationFunction: AI.evaluation.english,
   maxDepth: 7,
 });
 
 // Play with the AIs until there is a winner
-while (draughts.status() === Status.PLAYING) {
-  console.log(`${draughts.toString()}`);
-  console.log(`to_move = ${draughts.player()}`);
+while (draughts.status === DraughtsStatus.PLAYING) {
+  console.log(`${draughts.adapter1D.toString()}`);
+  console.log(`to_move = ${draughts.player}`);
   const move =
-    draughts.player() === Player.LIGHT ? weakAI(engine) : strongAI(engine);
-  if (move) engine.move(move);
+    draughts.player === DraughtsPlayer.LIGHT
+      ? weakAI(draughts)
+      : strongAI(draughts);
+  if (move) draughts.move(move);
 }
 
 // Announce the winner
-console.log(`${draughts.toString()}`);
-console.log(`status = ${draughts.status()}`);
+console.log(`${draughts.adapter1D.toString()}`);
+console.log(`status = ${draughts.status}`);

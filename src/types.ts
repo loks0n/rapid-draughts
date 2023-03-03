@@ -1,76 +1,77 @@
 import Long from 'long';
 
-// Universal types
-
-export enum Player {
+export enum DraughtsPlayer {
   LIGHT = 'light',
   DARK = 'dark',
 }
 
-export enum Status {
-  PLAYING = 'playing',
-  DRAW = 'draw',
-  DARK_WON = 'dark_won',
-  LIGHT_WON = 'light_won',
+export type DraughtsPiece1D = {
+  king: boolean;
+  player: DraughtsPlayer;
+};
+
+export type DraughtsDarkSquare1D = {
+  piece: DraughtsPiece1D | undefined;
+  location: number;
+  dark: true;
+};
+
+export type DraughtsLightSquare1D = {
+  piece: undefined;
+  location: undefined;
+  dark: false;
+};
+
+export type DraughtsSquare1D = DraughtsLightSquare1D | DraughtsDarkSquare1D;
+
+export type DraughtsBoard1D = DraughtsSquare1D[];
+
+export interface DraughtsMove1D {
+  origin: number;
+  destination: number;
+  captures: number[];
 }
 
-// Engine types
+export enum DraughtsStatus {
+  PLAYING = 'playing',
+  DRAW = 'draw',
+  LIGHT_WON = 'light_won',
+  DARK_WON = 'dark_won',
+}
 
 export type Bitboard = number | Long;
 
-export type Board<T extends Bitboard> = {
+export type DraughtsEngineBoard<T extends Bitboard> = {
   light: T;
   dark: T;
   king: T;
 };
 
-export type Move<T extends Bitboard> = {
+export type DraughtsEngineMove<T extends Bitboard> = {
   origin: T;
   destination: T;
   captures: T;
 };
 
-export interface IDraughtsBoard<T extends Bitboard> {
-  board: Board<T>;
-  moves(): Move<T>[];
-  move(move: Move<T>): void;
+export interface IDraughtsEngineBase {
+  player: DraughtsPlayer;
+  status: DraughtsStatus;
 }
 
-export interface IDraughtsState {
-  playerToMove: Player;
-  status(): Status;
-}
-
-export interface ICloneable {
+export interface IDraughtsEngine<T extends Bitboard>
+  extends IDraughtsEngineBase {
+  moves: DraughtsEngineMove<T>[];
+  board: DraughtsEngineBoard<T>;
+  move(move: DraughtsEngineMove<T>): void;
   clone(): this;
 }
 
-export type IDraughtsEngine<T extends Bitboard> = IDraughtsBoard<T> &
-  IDraughtsState &
-  ICloneable;
+export interface IDraughtsGameAdapter1D extends IDraughtsEngineBase {
+  moves: DraughtsMove1D[];
+  board: DraughtsBoard1D;
+  move(move: DraughtsMove1D): void;
+}
 
-// 1D Types
-
-export type Square1D = {
-  player: Player;
-  king: boolean;
-};
-
-export type Board1D = (Square1D | undefined)[];
-
-export type Square1DRef = number;
-
-export type Move1D = {
-  origin: Square1DRef;
-  destination: Square1DRef;
-  captures: Square1DRef[];
-};
-
-export interface IDraughts1D {
-  toString(): string;
-  player(): Player;
-  status(): Status;
-  board(): Board1D;
-  moves(): Move1D[];
-  move(move: Move1D): void;
+export interface WithAdapter1D {
+  adapter1D: IDraughtsGameAdapter1D;
 }
