@@ -23,6 +23,7 @@ while (draughts.status === DraughtsStatus.PLAYING) {
     draughts.player === DraughtsPlayer.LIGHT
       ? weakAI(draughts)
       : strongAI(draughts);
+
   if (move) draughts.move(move);
 }
 

@@ -53,7 +53,7 @@ export class EnglishDraughtsEngine implements IEnglishDraughtsEngine {
   board: DraughtsEngineBoard<number>;
   drawCounters: EnglishDraughtsDrawCounter;
 
-  adapter1D: IDraughtsGameAdapter1D;
+  adapter1D: EnglishDraughtsAdapter1D;
 
   private _moves: DraughtsEngineMove<number>[] | undefined;
   private _status: DraughtsStatus | undefined;
