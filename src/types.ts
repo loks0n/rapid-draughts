@@ -12,13 +12,13 @@ export type DraughtsPiece1D = {
 
 export type DraughtsDarkSquare1D = {
   piece: DraughtsPiece1D | undefined;
-  location: number;
+  position: number;
   dark: true;
 };
 
 export type DraughtsLightSquare1D = {
   piece: undefined;
-  location: undefined;
+  position: undefined;
   dark: false;
 };
 

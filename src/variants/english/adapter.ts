@@ -155,7 +155,7 @@ export class EnglishDraughtsAdapter1D implements IDraughtsGameAdapter1D {
 
       return {
         dark: true,
-        location: Math.floor(index / 2),
+        position: Math.floor(index / 2),
         piece:
           isLightPiece || isDarkPiece
             ? {
