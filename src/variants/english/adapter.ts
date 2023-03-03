@@ -1,7 +1,6 @@
 import { S, splitBits } from './utils';
 import {
   DraughtsBoard1D,
-  DraughtsSquare1D as DraughtsSquare1D,
   DraughtsEngineMove,
   DraughtsMove1D,
   DraughtsPlayer,
@@ -11,78 +10,39 @@ import {
 import { IEnglishDraughtsEngine } from './types';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
-  undefined,
   S[11],
-  undefined,
   S[5],
-  undefined,
   S[31],
-  undefined,
   S[25],
   S[10],
-  undefined,
   S[4],
-  undefined,
   S[30],
-  undefined,
   S[24],
-  undefined,
-  undefined,
   S[3],
-  undefined,
   S[29],
-  undefined,
   S[23],
-  undefined,
   S[17],
   S[2],
-  undefined,
   S[28],
-  undefined,
   S[22],
-  undefined,
   S[16],
-  undefined,
-  undefined,
   S[27],
-  undefined,
   S[21],
-  undefined,
   S[15],
-  undefined,
   S[9],
   S[26],
-  undefined,
   S[20],
-  undefined,
   S[14],
-  undefined,
   S[8],
-  undefined,
-  undefined,
   S[19],
-  undefined,
   S[13],
-  undefined,
   S[7],
-  undefined,
   S[1],
   S[18],
-  undefined,
   S[12],
-  undefined,
   S[6],
-  undefined,
   S[0],
-  undefined,
 ];
-
-function isDarkSquare(squareIndex: number, boardSize = 8): boolean {
-  const file = squareIndex % boardSize;
-  const rank = Math.floor(squareIndex / boardSize);
-
-  return (rank + file) % 2 === 0;
-}
 
 const SQUARE_TO_REF: Map<number | undefined, number | undefined> = new Map();
 for (const [squareIndex, square] of ENGLISH_DRAUGHTS_LAYOUT.entries()) {
@@ -144,18 +104,22 @@ export class EnglishDraughtsAdapter1D implements IDraughtsGameAdapter1D {
   }
 
   private _initializeBoard(): DraughtsBoard1D {
-    return ENGLISH_DRAUGHTS_LAYOUT.map<DraughtsSquare1D>((bit, index) => {
-      if (bit === undefined || isDarkSquare(index)) {
-        return { dark: false };
+    const board: DraughtsBoard1D = [];
+
+    for (const [position, bit] of ENGLISH_DRAUGHTS_LAYOUT.entries()) {
+      // light squares before
+      if (Math.floor(position / 4) % 2 === 0) {
+        board.push({ dark: false, piece: undefined, position: undefined });
       }
 
       const isLightPiece = !!(bit & this.engine.board.light);
       const isDarkPiece = !!(bit & this.engine.board.dark);
       const isKingPiece = !!(bit & this.engine.board.king);
 
-      return {
+      // populated dark square
+      board.push({
         dark: true,
-        position: Math.floor(index / 2),
+        position,
         piece:
           isLightPiece || isDarkPiece
             ? {
@@ -165,8 +129,15 @@ export class EnglishDraughtsAdapter1D implements IDraughtsGameAdapter1D {
                 king: isKingPiece,
               }
             : undefined,
-      };
-    });
+      });
+
+      // light squares after
+      if (Math.floor(position / 4) % 2 !== 0) {
+        board.push({ dark: false, piece: undefined, position: undefined });
+      }
+    }
+
+    return board;
   }
 
   get moves(): DraughtsMove1D[] {
