@@ -42,6 +42,11 @@ export abstract class AbstractDraughtsAdapter1D<
     ));
   }
 
+  wipeCache() {
+    this._board = undefined;
+    this._moves = undefined;
+  }
+
   move(adapterMove: DraughtsMove1D) {
     const engineMove = this.convertAdapterMoveToEngineMove(adapterMove);
     this.engine.move(engineMove);

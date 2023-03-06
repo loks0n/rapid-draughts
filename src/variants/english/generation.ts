@@ -85,12 +85,12 @@ export class EnglishDraughtsMoveGenerator {
     const moves: DraughtsEngineMove<number>[] = [];
 
     if (origin & this.forward) {
-      const d1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.empty;
+      const d1 = (rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
       if (d1) {
         moves.push({ origin, destination: d1, captures: 0 });
       }
 
-      const d2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.empty;
+      const d2 = (rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.empty) >>> 0;
       if (d2) {
         moves.push({ origin, destination: d2, captures: 0 });
       }

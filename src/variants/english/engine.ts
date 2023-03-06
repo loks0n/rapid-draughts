@@ -157,12 +157,17 @@ export class EnglishDraughtsEngine implements IEnglishDraughtsEngine {
       move
     );
 
-    (this.player = togglePlayer(this.player)),
-      (this.board = board),
-      (this.drawCounters = drawCounters);
+    this.player = togglePlayer(this.player);
+    this.board = board;
+    this.drawCounters = drawCounters;
 
-    // Reset the cached fields
-    (this._moves = undefined), (this._status = undefined);
+    this._wipeCache();
+  }
+
+  private _wipeCache() {
+    this._moves = undefined;
+    this._status = undefined;
+    this.adapter1D.wipeCache();
   }
 
   serialize() {
