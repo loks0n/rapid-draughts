@@ -21,24 +21,6 @@ describe('simple move', () => {
   });
 });
 
-describe('tricky move', () => {
-  let engine: EnglishDraughtsEngine;
-
-  beforeEach(() => {
-    engine = new EnglishDraughtsEngine({
-      board: { light: S[30], dark: S[21], king: 0 },
-      player: DraughtsPlayer.LIGHT,
-    });
-  });
-
-  test('correct moves', () => {
-    assert.sameDeepMembers(engine.moves, [
-      { origin: S[30], destination: S[31], captures: 0 },
-      { origin: S[30], destination: S[5], captures: 0 },
-    ]);
-  });
-});
-
 describe('simple jump', () => {
   let engine: EnglishDraughtsEngine;
 

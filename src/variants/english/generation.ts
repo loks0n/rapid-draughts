@@ -85,24 +85,24 @@ export class EnglishDraughtsMoveGenerator {
     const moves: DraughtsEngineMove<number>[] = [];
 
     if (origin & this.forward) {
-      const d1 = (rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
+      const d1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.empty;
       if (d1) {
         moves.push({ origin, destination: d1, captures: 0 });
       }
 
-      const d2 = (rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.empty) >>> 0;
+      const d2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.empty;
       if (d2) {
         moves.push({ origin, destination: d2, captures: 0 });
       }
     }
 
     if (origin & this.backward) {
-      const d3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & (this.empty >>> 0);
+      const d3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.empty;
       if (d3) {
         moves.push({ origin, destination: d3, captures: 0 });
       }
 
-      const d4 = (rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.empty) >>> 0;
+      const d4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.empty;
       if (d4) {
         moves.push({ origin, destination: d4, captures: 0 });
       }
@@ -163,13 +163,13 @@ export class EnglishDraughtsMoveGenerator {
 
     if (origin & this.backward) {
       const c3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.opponent;
-      const d3 = (rotRight(c3 & Mask.BACKWARD_LEFT, 1) & this.empty) >>> 0;
+      const d3 = rotRight(c3 & Mask.BACKWARD_LEFT, 1) & this.empty;
       if (d3) {
         moves.push({ origin, destination: d3, captures: c3 });
       }
 
       const c4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.opponent;
-      const d4 = (rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & this.empty) >>> 0;
+      const d4 = rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & this.empty;
       if (d4) {
         moves.push({ origin, destination: d4, captures: c4 });
       }
