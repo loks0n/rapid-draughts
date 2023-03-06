@@ -54,10 +54,10 @@ export class EnglishDraughtsAdapter1D extends AbstractDraughtsAdapter1D<EnglishD
     engineMove: DraughtsEngineMove<number>
   ): DraughtsMove1D {
     const origin = SQUARE_TO_REF.get(engineMove.origin);
-    if (!origin) throw new Error('invalid move origin');
+    if (origin === undefined) throw new Error('invalid move origin');
 
     const destination = SQUARE_TO_REF.get(engineMove.destination);
-    if (!destination) throw new Error('invalid move destination');
+    if (destination === undefined) throw new Error('invalid move destination');
 
     const captures = [];
     for (const capture of splitBits(engineMove.captures)) {
