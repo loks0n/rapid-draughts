@@ -8,7 +8,7 @@ describe('possible openings', () => {
   let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.new();
+    engine = EnglishDraughtsEngine.setup();
   });
 
   test('correct dark moves', () => {
@@ -64,7 +64,7 @@ describe('simple move', () => {
   let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.new({
+    engine = EnglishDraughtsEngine.setup({
       board: { light: S[21] | S[0], dark: S[24], king: 0 },
     });
   });
@@ -88,7 +88,7 @@ describe('tricky move', () => {
   let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.new({
+    engine = EnglishDraughtsEngine.setup({
       board: { light: S[30], dark: S[21], king: 0 },
       player: DraughtsPlayer.LIGHT,
     });
@@ -106,7 +106,7 @@ describe('simple jump', () => {
   let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.new({
+    engine = EnglishDraughtsEngine.setup({
       board: { light: S[21] | S[0], dark: S[22], king: 0 },
     });
   });
@@ -122,7 +122,7 @@ describe('jump and become king', () => {
   let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.new({
+    engine = EnglishDraughtsEngine.setup({
       board: { light: S[17], dark: S[24] | S[14], king: 0 },
       player: DraughtsPlayer.LIGHT,
     });

@@ -82,7 +82,7 @@ function evaluateMiddlegame(
 
 export const EnglishDraughtsComputer = {
   random(): DraughtsComputerInstance<number, EnglishDraughtsEngineStore> {
-    return DraughtsComputer.new({
+    return DraughtsComputer.setup({
       adapter: EnglishDraughtsAdapter1D,
       strategy: random<number, EnglishDraughtsEngineStore>,
       options: undefined,
@@ -100,7 +100,7 @@ export const EnglishDraughtsComputer = {
       evaluationFunction: options.evaluationFunction ?? evaluate,
     };
 
-    return DraughtsComputer.new({
+    return DraughtsComputer.setup({
       adapter: EnglishDraughtsAdapter1D,
       strategy: alphaBeta<number, EnglishDraughtsEngineStore>,
       options: withDefaultOptions,

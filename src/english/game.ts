@@ -125,8 +125,10 @@ export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
 };
 
 export const EnglishDraughts = {
-  new(data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>) {
-    const engine = EnglishDraughtsEngine.new(data);
+  setup(
+    data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>
+  ) {
+    const engine = EnglishDraughtsEngine.setup(data);
     return new DraughtsGame1D(engine, EnglishDraughtsAdapter1D);
   },
 };

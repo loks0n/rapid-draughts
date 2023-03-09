@@ -19,7 +19,7 @@ import {
 } from 'rapid-draughts';
 
 // Initialise the game
-const draughts = EnglishDraughts.new();
+const draughts = EnglishDraughts.setup();
 
 // Show the available moves and play one.
 console.table(draughts.moves);

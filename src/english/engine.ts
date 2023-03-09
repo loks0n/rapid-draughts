@@ -131,7 +131,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
 };
 
 export const EnglishDraughtsEngine = {
-  new(
+  setup(
     data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>
   ): DraughtsEngine<number, EnglishDraughtsEngineStore> {
     return new DraughtsEngine(

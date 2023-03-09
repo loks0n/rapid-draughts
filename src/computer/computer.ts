@@ -29,7 +29,7 @@ export type DraughtsComputerArguments<T extends Bitboard, E, O> = {
 };
 
 export const DraughtsComputer = {
-  new<T extends Bitboard, E, O>({
+  setup<T extends Bitboard, E, O>({
     adapter,
     strategy,
     options,
