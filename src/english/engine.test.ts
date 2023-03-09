@@ -1,18 +1,18 @@
 import { describe, beforeEach, test, assert } from 'vitest';
-import { DraughtsPlayer } from '../../types';
+import { DraughtsEngine, DraughtsPlayer } from '../core/engine';
 
-import { EnglishDraughtsEngine } from './engine';
+import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
 import { S } from './utils';
 
 describe('possible openings', () => {
-  let engine: EnglishDraughtsEngine;
+  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = new EnglishDraughtsEngine();
+    engine = EnglishDraughtsEngine.new();
   });
 
   test('correct dark moves', () => {
-    assert.equal(engine.player, DraughtsPlayer.DARK);
+    assert.equal(engine.data.player, DraughtsPlayer.DARK);
     assert.sameDeepMembers(engine.moves, [
       { origin: S[3], destination: S[2], captures: 0 },
       { origin: S[3], destination: S[28], captures: 0 },
@@ -26,9 +26,9 @@ describe('possible openings', () => {
 
   test('correct board after move', () => {
     engine.move({ origin: S[3], destination: S[2], captures: 0 });
-    assert.equal(engine.player, DraughtsPlayer.LIGHT);
+    assert.equal(engine.data.player, DraughtsPlayer.LIGHT);
     assert.equal(
-      engine.board.dark,
+      engine.data.board.dark,
       S[2] |
         S[29] |
         S[23] |
@@ -42,12 +42,12 @@ describe('possible openings', () => {
         S[31] |
         S[25]
     );
-    assert.equal(engine.board.king, 0);
+    assert.equal(engine.data.board.king, 0);
   });
 
   test('correct light moves', () => {
     engine.move({ origin: S[3], destination: S[2], captures: 0 });
-    assert.equal(engine.player, DraughtsPlayer.LIGHT);
+    assert.equal(engine.data.player, DraughtsPlayer.LIGHT);
     assert.sameDeepMembers(engine.moves, [
       { origin: S[26], destination: S[27], captures: 0 },
       { origin: S[20], destination: S[27], captures: 0 },
@@ -61,10 +61,10 @@ describe('possible openings', () => {
 });
 
 describe('simple move', () => {
-  let engine: EnglishDraughtsEngine;
+  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = new EnglishDraughtsEngine({
+    engine = EnglishDraughtsEngine.new({
       board: { light: S[21] | S[0], dark: S[24], king: 0 },
     });
   });
@@ -78,17 +78,17 @@ describe('simple move', () => {
 
   test('correct board after move', () => {
     engine.move({ origin: S[24], destination: S[23], captures: 0 });
-    assert.equal(engine.board.light, S[21] | S[0]);
-    assert.equal(engine.board.dark, S[23]);
-    assert.equal(engine.board.king, 0);
+    assert.equal(engine.data.board.light, S[21] | S[0]);
+    assert.equal(engine.data.board.dark, S[23]);
+    assert.equal(engine.data.board.king, 0);
   });
 });
 
 describe('tricky move', () => {
-  let engine: EnglishDraughtsEngine;
+  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = new EnglishDraughtsEngine({
+    engine = EnglishDraughtsEngine.new({
       board: { light: S[30], dark: S[21], king: 0 },
       player: DraughtsPlayer.LIGHT,
     });
@@ -103,10 +103,10 @@ describe('tricky move', () => {
 });
 
 describe('simple jump', () => {
-  let engine: EnglishDraughtsEngine;
+  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = new EnglishDraughtsEngine({
+    engine = EnglishDraughtsEngine.new({
       board: { light: S[21] | S[0], dark: S[22], king: 0 },
     });
   });
@@ -119,10 +119,10 @@ describe('simple jump', () => {
 });
 
 describe('jump and become king', () => {
-  let engine: EnglishDraughtsEngine;
+  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
 
   beforeEach(() => {
-    engine = new EnglishDraughtsEngine({
+    engine = EnglishDraughtsEngine.new({
       board: { light: S[17], dark: S[24] | S[14], king: 0 },
       player: DraughtsPlayer.LIGHT,
     });

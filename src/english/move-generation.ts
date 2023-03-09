@@ -2,7 +2,7 @@ import {
   DraughtsEngineBoard,
   DraughtsEngineMove,
   DraughtsPlayer,
-} from '../../types';
+} from '../core/engine';
 import * as Mask from './mask';
 import { rotLeft, rotRight } from './utils';
 
@@ -117,7 +117,7 @@ export class EnglishDraughtsMoveGenerator {
 
     while (searchStack.length > 0) {
       const searchJump = searchStack.pop();
-      if (!searchJump) break;
+      if (searchJump === undefined) break;
 
       const nextBoard = this._fromMove({
         ...searchJump,
@@ -147,14 +147,12 @@ export class EnglishDraughtsMoveGenerator {
 
     if (origin & this.forward) {
       const c1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.opponent;
-      // WARNING: Requires 0 fill shift to treat S[31] square as unsigned
       const d1 = (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
       if (d1) {
         moves.push({ origin, destination: d1, captures: c1 });
       }
 
       const c2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.opponent;
-      // WARNING: Requires 0 fill shift to treat S[31] square as unsigned
       const d2 = (rotLeft(c2 & Mask.FORWARD_RIGHT, 1) & this.empty) >>> 0;
       if (d2) {
         moves.push({ origin, destination: d2, captures: c2 });

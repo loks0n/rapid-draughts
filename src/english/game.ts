@@ -1,12 +1,16 @@
 import {
-  DraughtsEngineMove,
-  DraughtsMove1D,
   DraughtsEngineBoard,
-  DraughtsBoard1D,
+  DraughtsEngineData,
+  DraughtsEngineMove,
   DraughtsPlayer,
-} from '../../types';
-import { AbstractDraughtsAdapter1D } from '../adapter';
-import { EnglishDraughtsEngine } from './engine';
+} from '../core/engine';
+import {
+  DraughtsBoard1D,
+  DraughtsAdapter1D,
+  DraughtsMove1D,
+  DraughtsGame1D,
+} from '../core/game';
+import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
 import { S, splitBits } from './utils';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
@@ -49,10 +53,8 @@ for (const [squareIndex, square] of ENGLISH_DRAUGHTS_LAYOUT.entries()) {
   SQUARE_TO_REF.set(square, squareIndex);
 }
 
-export class EnglishDraughtsAdapter1D extends AbstractDraughtsAdapter1D<EnglishDraughtsEngine> {
-  convertEngineMoveToAdapterMove(
-    engineMove: DraughtsEngineMove<number>
-  ): DraughtsMove1D {
+export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
+  toMove1D(engineMove: DraughtsEngineMove<number>): DraughtsMove1D {
     const origin = SQUARE_TO_REF.get(engineMove.origin);
     if (origin === undefined) throw new Error('invalid move origin');
 
@@ -66,11 +68,9 @@ export class EnglishDraughtsAdapter1D extends AbstractDraughtsAdapter1D<EnglishD
     }
 
     return { origin, destination, captures };
-  }
+  },
 
-  convertAdapterMoveToEngineMove(
-    adapterMove: DraughtsMove1D
-  ): DraughtsEngineMove<number> {
+  toEngineMove(adapterMove: DraughtsMove1D): DraughtsEngineMove<number> {
     const origin = ENGLISH_DRAUGHTS_LAYOUT[adapterMove.origin];
     if (origin === undefined) throw new Error('invalid move origin');
 
@@ -84,11 +84,9 @@ export class EnglishDraughtsAdapter1D extends AbstractDraughtsAdapter1D<EnglishD
       captures |= square;
     }
     return { origin, destination, captures };
-  }
+  },
 
-  convertEngineBoardToAdapterBoard(
-    engineBoard: DraughtsEngineBoard<number>
-  ): DraughtsBoard1D {
+  toBoard1D(engineBoard: DraughtsEngineBoard<number>): DraughtsBoard1D {
     const board: DraughtsBoard1D = [];
 
     for (const [position, bit] of ENGLISH_DRAUGHTS_LAYOUT.entries()) {
@@ -123,5 +121,12 @@ export class EnglishDraughtsAdapter1D extends AbstractDraughtsAdapter1D<EnglishD
     }
 
     return board;
-  }
-}
+  },
+};
+
+export const EnglishDraughts = {
+  new(data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>) {
+    const engine = EnglishDraughtsEngine.new(data);
+    return new DraughtsGame1D(engine, EnglishDraughtsAdapter1D);
+  },
+};
