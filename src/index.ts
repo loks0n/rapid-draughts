@@ -1,4 +1,4 @@
-export { EnglishDraughts } from './english/game';
+export { EnglishDraughts, EnglishDraughtsBoard } from './english/game';
 export { EnglishDraughtsComputer } from './english/computer';
 export { DraughtsStatus, DraughtsPlayer } from './core/engine';
 export type {

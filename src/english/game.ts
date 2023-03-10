@@ -9,8 +9,10 @@ import {
   DraughtsAdapter1D,
   DraughtsMove1D,
   DraughtsGame1D,
+  DraughtsDarkSquare1D,
 } from '../core/game';
 import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
+import * as Mask from './mask';
 import { S, splitBits } from './utils';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
@@ -130,5 +132,27 @@ export const EnglishDraughts = {
   ) {
     const engine = EnglishDraughtsEngine.setup(data);
     return new DraughtsGame1D(engine, EnglishDraughtsAdapter1D);
+  },
+};
+
+export const EnglishDraughtsBoard = {
+  empty(): DraughtsBoard1D {
+    return EnglishDraughtsAdapter1D.toBoard1D({ light: 0, dark: 0, king: 0 });
+  },
+  start(): DraughtsBoard1D {
+    return EnglishDraughtsAdapter1D.toBoard1D({
+      light: Mask.LIGHT_START,
+      dark: Mask.DARK_START,
+      king: 0,
+    });
+  },
+  setup(squares: DraughtsDarkSquare1D[]): DraughtsBoard1D {
+    const board = this.empty();
+
+    for (const square of squares) {
+      board[square.position] = square;
+    }
+
+    return board;
   },
 };
