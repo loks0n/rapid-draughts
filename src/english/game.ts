@@ -9,10 +9,9 @@ import {
   DraughtsAdapter1D,
   DraughtsMove1D,
   DraughtsGame1D,
-  DraughtsDarkSquare1D,
 } from '../core/game';
 import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
-import * as Mask from './mask';
+
 import { S, splitBits } from './utils';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
