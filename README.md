@@ -8,6 +8,10 @@ Bitboards enable fast move generation and have minimal memory usage.
 
 The engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).
 
+## Demo
+
+rapid-draughts powers the draughts game site [http://www.draughts.org/](http://www.draughts.org/). Check it out!
+
 ## How to use
 
 ```typescript
