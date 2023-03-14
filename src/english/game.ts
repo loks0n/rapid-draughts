@@ -9,6 +9,7 @@ import {
   DraughtsAdapter1D,
   DraughtsMove1D,
   DraughtsGame1D,
+  DraughtsGameHistory1D,
 } from '../core/game';
 import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
 
@@ -125,11 +126,21 @@ export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
   },
 };
 
+export const EnglishDraughtsDefaultHistory1D: DraughtsGameHistory1D = {
+  moves: [],
+  boards: [],
+};
+
 export const EnglishDraughts = {
   setup(
-    data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>
+    data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>,
+    history?: Partial<DraughtsGameHistory1D>
   ) {
     const engine = EnglishDraughtsEngine.setup(data);
-    return new DraughtsGame1D(engine, EnglishDraughtsAdapter1D);
+    return new DraughtsGame1D(
+      engine,
+      { ...EnglishDraughtsDefaultHistory1D, ...history },
+      EnglishDraughtsAdapter1D
+    );
   },
 };

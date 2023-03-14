@@ -33,3 +33,4 @@ while (draughts.status === DraughtsStatus.PLAYING) {
 // Announce the winner
 console.log(`${draughts.toString()}`);
 console.log(`status = ${draughts.status}`);
+console.log(`ended after ${draughts.history.moves.length} moves`);

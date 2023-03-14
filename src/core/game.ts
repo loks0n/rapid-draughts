@@ -28,11 +28,16 @@ export type DraughtsSquare1D = DraughtsLightSquare1D | DraughtsDarkSquare1D;
 
 export type DraughtsBoard1D = DraughtsSquare1D[];
 
-export interface DraughtsMove1D {
+export type DraughtsMove1D = {
   origin: number;
   destination: number;
   captures: number[];
-}
+};
+
+export type DraughtsGameHistory1D = {
+  moves: DraughtsMove1D[];
+  boards: DraughtsBoard1D[];
+};
 
 export type DraughtsAdapter1D<T extends Bitboard> = {
   toMove1D: (engineMove: DraughtsEngineMove<T>) => DraughtsMove1D;
@@ -42,14 +47,20 @@ export type DraughtsAdapter1D<T extends Bitboard> = {
 
 export class DraughtsGame1D<T extends Bitboard, E> {
   engine: DraughtsEngine<T, E>;
+  history: DraughtsGameHistory1D;
 
   private adapter: DraughtsAdapter1D<T>;
 
   private _board: DraughtsBoard1D | undefined;
   private _moves: DraughtsMove1D[] | undefined;
 
-  constructor(engine: DraughtsEngine<T, E>, adapter: DraughtsAdapter1D<T>) {
+  constructor(
+    engine: DraughtsEngine<T, E>,
+    history: DraughtsGameHistory1D,
+    adapter: DraughtsAdapter1D<T>
+  ) {
     this.engine = engine;
+    this.history = history;
     this.adapter = adapter;
   }
 
@@ -72,8 +83,12 @@ export class DraughtsGame1D<T extends Bitboard, E> {
   }
 
   move(adapterMove: DraughtsMove1D) {
+    this.history.boards.push(this.board);
+    this.history.moves.push(adapterMove);
+
     const engineMove = this.adapter.toEngineMove(adapterMove);
     this.engine.move(engineMove);
+
     this._board = undefined;
     this._moves = undefined;
   }
