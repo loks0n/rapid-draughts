@@ -12,6 +12,15 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "draughts",
+    "draughts engine",
+    "checkers",
+    "checkers engine",
+    "boardgame",
+    "bitboard",
+    "english draughts"
+  ],
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
