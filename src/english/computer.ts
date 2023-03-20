@@ -80,13 +80,13 @@ function evaluateMiddlegame(
   return evaluation;
 }
 
-export type EnglishDraughtsComputerInstance = DraughtsComputerInstance<
+export type EnglishDraughtsComputer = DraughtsComputerInstance<
   number,
   EnglishDraughtsEngineStore
 >;
 
-export const EnglishDraughtsComputer = {
-  random(): EnglishDraughtsComputerInstance {
+export const EnglishDraughtsComputerFactory = {
+  random(): EnglishDraughtsComputer {
     return DraughtsComputer.setup({
       adapter: EnglishDraughtsAdapter1D,
       strategy: random<number, EnglishDraughtsEngineStore>,
@@ -95,7 +95,7 @@ export const EnglishDraughtsComputer = {
   },
   alphaBeta(
     options: Partial<AlphaBetaOptions<number, EnglishDraughtsEngineStore>>
-  ): EnglishDraughtsComputerInstance {
+  ): EnglishDraughtsComputer {
     const withDefaultOptions: AlphaBetaOptions<
       number,
       EnglishDraughtsEngineStore

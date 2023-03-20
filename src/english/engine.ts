@@ -20,7 +20,7 @@ export type EnglishDraughtsEngineData = DraughtsEngineData<
   EnglishDraughtsEngineStore
 >;
 
-export type EnglishDraughtsEngineAbstract = DraughtsEngine<
+export type EnglishDraughtsEngine = DraughtsEngine<
   number,
   EnglishDraughtsEngineStore
 >;
@@ -48,7 +48,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
     };
   },
 
-  status(engine: EnglishDraughtsEngineAbstract) {
+  status(engine: EnglishDraughtsEngine) {
     if (engine.moves.length === 0) {
       return engine.data.player === DraughtsPlayer.LIGHT
         ? DraughtsStatus.DARK_WON
@@ -63,7 +63,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
     return DraughtsStatus.PLAYING;
   },
 
-  moves(engine: EnglishDraughtsEngineAbstract) {
+  moves(engine: EnglishDraughtsEngine) {
     const generator = EnglishDraughtsMoveGenerator.fromPlayerAndBoard(
       engine.data.player,
       engine.data.board
@@ -87,10 +87,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
     return moves;
   },
 
-  move(
-    engine: EnglishDraughtsEngineAbstract,
-    move: DraughtsEngineMove<number>
-  ) {
+  move(engine: EnglishDraughtsEngine, move: DraughtsEngineMove<number>) {
     if (!engine.moves.some((validMove) => equals(move, validMove))) {
       throw new Error('invalid move');
     }
@@ -137,10 +134,8 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
   },
 };
 
-export const EnglishDraughtsEngine = {
-  setup(
-    data?: Partial<EnglishDraughtsEngineData>
-  ): EnglishDraughtsEngineAbstract {
+export const EnglishDraughtsEngineFactory = {
+  setup(data?: Partial<EnglishDraughtsEngineData>): EnglishDraughtsEngine {
     return new DraughtsEngine(
       { ...EnglishDraughtsEngineDefaultData, ...data },
       EnglishDraughtsEngineStrategy

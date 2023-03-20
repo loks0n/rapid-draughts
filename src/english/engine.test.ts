@@ -1,14 +1,17 @@
 import { describe, beforeEach, test, assert } from 'vitest';
 import { DraughtsEngine, DraughtsPlayer } from '../core/engine';
 
-import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
+import {
+  EnglishDraughtsEngineFactory as EngineFactory,
+  EnglishDraughtsEngine,
+} from './engine';
 import { S } from './utils';
 
 describe('possible openings', () => {
-  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
+  let engine: EnglishDraughtsEngine;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.setup();
+    engine = EngineFactory.setup();
   });
 
   test('correct dark moves', () => {
@@ -61,10 +64,10 @@ describe('possible openings', () => {
 });
 
 describe('simple move', () => {
-  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
+  let engine: EnglishDraughtsEngine;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.setup({
+    engine = EngineFactory.setup({
       board: { light: S[21] | S[0], dark: S[24], king: 0 },
     });
   });
@@ -85,10 +88,10 @@ describe('simple move', () => {
 });
 
 describe('tricky move', () => {
-  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
+  let engine: EnglishDraughtsEngine;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.setup({
+    engine = EngineFactory.setup({
       board: { light: S[30], dark: S[21], king: 0 },
       player: DraughtsPlayer.LIGHT,
     });
@@ -103,10 +106,10 @@ describe('tricky move', () => {
 });
 
 describe('simple jump', () => {
-  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
+  let engine: EnglishDraughtsEngine;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.setup({
+    engine = EngineFactory.setup({
       board: { light: S[21] | S[0], dark: S[22], king: 0 },
     });
   });
@@ -119,10 +122,10 @@ describe('simple jump', () => {
 });
 
 describe('jump and become king', () => {
-  let engine: DraughtsEngine<number, EnglishDraughtsEngineStore>;
+  let engine: EnglishDraughtsEngine;
 
   beforeEach(() => {
-    engine = EnglishDraughtsEngine.setup({
+    engine = EngineFactory.setup({
       board: { light: S[17], dark: S[24] | S[14], king: 0 },
       player: DraughtsPlayer.LIGHT,
     });

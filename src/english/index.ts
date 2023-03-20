@@ -1,7 +1,11 @@
 export { EnglishDraughts, type EnglishDraughtsGame } from './game';
-export { S as EnglishDraughtsSquare } from './utils';
+export { S } from './utils';
 export {
-  EnglishDraughtsComputer,
-  type EnglishDraughtsComputerInstance,
+  EnglishDraughtsComputerFactory,
+  type EnglishDraughtsComputer,
 } from './computer';
-export type { EnglishDraughtsEngineData } from './engine';
+export {
+  EnglishDraughtsEngineFactory,
+  type EnglishDraughtsEngine,
+  type EnglishDraughtsEngineData,
+} from './engine';

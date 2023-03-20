@@ -1,16 +1,19 @@
 import { DraughtsPlayer, DraughtsStatus } from '../src/core';
-import { EnglishDraughts, EnglishDraughtsComputer } from '../src/english';
+import {
+  EnglishDraughts as Draughts,
+  EnglishDraughtsComputerFactory as ComputerFactory,
+} from '../src/english';
 
 // Initialise the game
-const draughts = EnglishDraughts.setup();
+const draughts = Draughts.setup();
 
 // Show the available moves and play one.
 console.table(draughts.moves);
 draughts.move(draughts.moves[0]);
 
 // Initialise two computer players
-const weakComputer = EnglishDraughtsComputer.random();
-const strongComputer = EnglishDraughtsComputer.alphaBeta({
+const weakComputer = ComputerFactory.random();
+const strongComputer = ComputerFactory.alphaBeta({
   maxDepth: 7,
 });
 

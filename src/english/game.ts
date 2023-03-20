@@ -11,7 +11,10 @@ import {
   DraughtsGame1D,
   DraughtsGameHistory1D,
 } from '../core/game';
-import { EnglishDraughtsEngine, EnglishDraughtsEngineStore } from './engine';
+import {
+  EnglishDraughtsEngineFactory,
+  EnglishDraughtsEngineStore,
+} from './engine';
 
 import { S, splitBits } from './utils';
 
@@ -141,7 +144,7 @@ export const EnglishDraughts = {
     data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>,
     history?: Partial<DraughtsGameHistory1D>
   ): EnglishDraughtsGame {
-    const engine = EnglishDraughtsEngine.setup(data);
+    const engine = EnglishDraughtsEngineFactory.setup(data);
     return new DraughtsGame1D(
       engine,
       { ...EnglishDraughtsDefaultHistory1D, ...history },

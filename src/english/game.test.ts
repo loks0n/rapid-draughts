@@ -1,12 +1,10 @@
 import { describe, beforeEach, test, assert } from 'vitest';
 import { DraughtsPlayer } from '../core/engine';
 
-import { DraughtsGame1D } from '../core/game';
-import { EnglishDraughtsEngineStore } from './engine';
-import { EnglishDraughts } from './game';
+import { EnglishDraughts, EnglishDraughtsGame } from './game';
 
 describe('start position', () => {
-  let draughts: DraughtsGame1D<number, EnglishDraughtsEngineStore>;
+  let draughts: EnglishDraughtsGame;
 
   beforeEach(() => {
     draughts = EnglishDraughts.setup();

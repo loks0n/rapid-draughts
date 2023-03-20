@@ -16,18 +16,21 @@ rapid-draughts powers the draughts game site [http://www.draughts.org/](http://w
 
 ```typescript
 import { DraughtsPlayer, DraughtsStatus } from 'rapid-draughts/core';
-import { EnglishDraughts, EnglishDraughtsComputer } from 'rapid-draughts/english';
+import {
+  EnglishDraughts as Draughts,
+  EnglishDraughtsComputerFactory as ComputerFactory,
+} from 'rapid-draughts/english';
 
 // Initialise the game
-const draughts = EnglishDraughts.setup();
+const draughts = Draughts.setup();
 
 // Show the available moves and play one.
 console.table(draughts.moves);
 draughts.move(draughts.moves[0]);
 
 // Initialise two computer players
-const weakComputer = EnglishDraughtsComputer.random();
-const strongComputer = EnglishDraughtsComputer.alphaBeta({
+const weakComputer = ComputerFactory.random();
+const strongComputer = ComputerFactory.alphaBeta({
   maxDepth: 7,
 });
 
@@ -47,6 +50,5 @@ while (draughts.status === DraughtsStatus.PLAYING) {
 console.log(`${draughts.toString()}`);
 console.log(`status = ${draughts.status}`);
 console.log(`ended after ${draughts.history.moves.length} moves`);
-
 
 ```
