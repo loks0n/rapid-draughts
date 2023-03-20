@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, assert } from 'vitest';
-import { DraughtsEngine, DraughtsPlayer } from '../core/engine';
+import { DraughtsPlayer } from '../core/engine';
 
 import {
   EnglishDraughtsEngineFactory as EngineFactory,
