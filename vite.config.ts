@@ -12,6 +12,7 @@ export default defineConfig({
   plugins: [
     dts({
       insertTypesEntry: true,
+      include: 'src/**/*.ts',
     }),
   ],
 });

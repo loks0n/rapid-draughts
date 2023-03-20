@@ -11,7 +11,9 @@
   "type": "module",
   "files": [
     "dist/*",
-    "index.d.ts"
+    "index.d.ts",
+    "core.d.ts",
+    "english.d.ts"
   ],
   "keywords": [
     "draughts",
