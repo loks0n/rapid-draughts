@@ -1,12 +1,12 @@
-import { defineConfig } from "vite";
-import dts from "vite-plugin-dts";
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   build: {
+    sourcemap: true,
     lib: {
-      entry: "./src/index.ts",
-      name: "rapid-draughts",
-      fileName: "index",
+      entry: { core: './src/core/index.ts', english: './src/english/index.ts' },
+      formats: ['es', 'cjs'],
     },
   },
   plugins: [

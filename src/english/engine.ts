@@ -15,10 +15,17 @@ export type EnglishDraughtsEngineStore = {
   sinceNonKingAdvance: number;
 };
 
-export const EnglishDraughtsEngineDefaultData: DraughtsEngineData<
+export type EnglishDraughtsEngineData = DraughtsEngineData<
   number,
   EnglishDraughtsEngineStore
-> = {
+>;
+
+export type EnglishDraughtsEngineAbstract = DraughtsEngine<
+  number,
+  EnglishDraughtsEngineStore
+>;
+
+export const EnglishDraughtsEngineDefaultData: EnglishDraughtsEngineData = {
   player: DraughtsPlayer.DARK,
   board: {
     light: Mask.LIGHT_START,
@@ -41,7 +48,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
     };
   },
 
-  status(engine: DraughtsEngine<number, EnglishDraughtsEngineStore>) {
+  status(engine: EnglishDraughtsEngineAbstract) {
     if (engine.moves.length === 0) {
       return engine.data.player === DraughtsPlayer.LIGHT
         ? DraughtsStatus.DARK_WON
@@ -56,7 +63,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
     return DraughtsStatus.PLAYING;
   },
 
-  moves(engine: DraughtsEngine<number, EnglishDraughtsEngineStore>) {
+  moves(engine: EnglishDraughtsEngineAbstract) {
     const generator = EnglishDraughtsMoveGenerator.fromPlayerAndBoard(
       engine.data.player,
       engine.data.board
@@ -81,7 +88,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
   },
 
   move(
-    engine: DraughtsEngine<number, EnglishDraughtsEngineStore>,
+    engine: EnglishDraughtsEngineAbstract,
     move: DraughtsEngineMove<number>
   ) {
     if (!engine.moves.some((validMove) => equals(move, validMove))) {
@@ -132,8 +139,8 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
 
 export const EnglishDraughtsEngine = {
   setup(
-    data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>
-  ): DraughtsEngine<number, EnglishDraughtsEngineStore> {
+    data?: Partial<EnglishDraughtsEngineData>
+  ): EnglishDraughtsEngineAbstract {
     return new DraughtsEngine(
       { ...EnglishDraughtsEngineDefaultData, ...data },
       EnglishDraughtsEngineStrategy

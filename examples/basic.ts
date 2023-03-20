@@ -1,9 +1,5 @@
-import {
-  DraughtsPlayer,
-  DraughtsStatus,
-  EnglishDraughtsComputer,
-  EnglishDraughts,
-} from '../src';
+import { DraughtsPlayer, DraughtsStatus } from '../src/core';
+import { EnglishDraughts, EnglishDraughtsComputer } from '../src/english';
 
 // Initialise the game
 const draughts = EnglishDraughts.setup();
