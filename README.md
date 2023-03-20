@@ -15,12 +15,8 @@ rapid-draughts powers the draughts game site [http://www.draughts.org/](http://w
 ## How to use
 
 ```typescript
-import {
-  DraughtsPlayer,
-  DraughtsStatus,
-  EnglishDraughtsComputer,
-  EnglishDraughts,
-} from 'rapid-draughts';
+import { DraughtsPlayer, DraughtsStatus } from 'rapid-draughts/core';
+import { EnglishDraughts, EnglishDraughtsComputer } from 'rapid-draughts/english';
 
 // Initialise the game
 const draughts = EnglishDraughts.setup();
@@ -50,5 +46,7 @@ while (draughts.status === DraughtsStatus.PLAYING) {
 // Announce the winner
 console.log(`${draughts.toString()}`);
 console.log(`status = ${draughts.status}`);
+console.log(`ended after ${draughts.history.moves.length} moves`);
+
 
 ```
