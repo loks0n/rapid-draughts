@@ -131,11 +131,16 @@ export const EnglishDraughtsDefaultHistory1D: DraughtsGameHistory1D = {
   boards: [],
 };
 
+export type EnglishDraughtsGame = DraughtsGame1D<
+  number,
+  EnglishDraughtsEngineStore
+>;
+
 export const EnglishDraughts = {
   setup(
     data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>,
     history?: Partial<DraughtsGameHistory1D>
-  ) {
+  ): EnglishDraughtsGame {
     const engine = EnglishDraughtsEngine.setup(data);
     return new DraughtsGame1D(
       engine,
