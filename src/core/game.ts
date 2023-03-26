@@ -1,27 +1,27 @@
-import {
+import { DraughtsPlayer } from './engine';
+import type {
   Bitboard,
   DraughtsEngine,
   DraughtsEngineBoard,
   DraughtsEngineMove,
-  DraughtsPlayer,
   DraughtsStatus,
 } from './engine';
 
 export type DraughtsPiece1D = {
-  king: boolean;
-  player: DraughtsPlayer;
+  readonly king: boolean;
+  readonly player: DraughtsPlayer;
 };
 
 export type DraughtsDarkSquare1D = {
-  piece: DraughtsPiece1D | undefined;
-  position: number;
-  dark: true;
+  readonly piece: DraughtsPiece1D | undefined;
+  readonly position: number;
+  readonly dark: true;
 };
 
 export type DraughtsLightSquare1D = {
-  piece: undefined;
-  position: undefined;
-  dark: false;
+  readonly piece: undefined;
+  readonly position: undefined;
+  readonly dark: false;
 };
 
 export type DraughtsSquare1D = DraughtsLightSquare1D | DraughtsDarkSquare1D;

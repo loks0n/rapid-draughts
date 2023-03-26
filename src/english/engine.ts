@@ -1,18 +1,16 @@
-import {
-  DraughtsEngine,
+import type {
   DraughtsEngineData,
   DraughtsEngineMove,
   DraughtsEngineStrategy,
-  DraughtsPlayer,
-  DraughtsStatus,
 } from '../core/engine';
+import { DraughtsEngine, DraughtsStatus, DraughtsPlayer } from '../core/engine';
 import * as Mask from './mask';
 import { EnglishDraughtsMoveGenerator } from './move-generation';
 import { equals, splitBits } from './utils';
 
 export type EnglishDraughtsEngineStore = {
-  sinceCapture: number;
-  sinceNonKingAdvance: number;
+  readonly sinceCapture: number;
+  readonly sinceNonKingAdvance: number;
 };
 
 export type EnglishDraughtsEngineData = DraughtsEngineData<

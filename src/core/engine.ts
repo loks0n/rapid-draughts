@@ -10,15 +10,15 @@ export enum DraughtsStatus {
 export type Bitboard = number | Long;
 
 export type DraughtsEngineBoard<T extends Bitboard> = {
-  light: T;
-  dark: T;
-  king: T;
+  readonly light: T;
+  readonly dark: T;
+  readonly king: T;
 };
 
 export type DraughtsEngineMove<T extends Bitboard> = {
-  origin: T;
-  destination: T;
-  captures: T;
+  readonly origin: T;
+  readonly destination: T;
+  readonly captures: T;
 };
 
 export enum DraughtsPlayer {
