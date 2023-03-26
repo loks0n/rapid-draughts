@@ -3,7 +3,7 @@ import {
   DraughtsEngineMove,
   DraughtsPlayer,
 } from '../core/engine';
-import * as Mask from './mask';
+import Mask from './mask';
 import { rotLeft, rotRight } from './utils';
 
 export type EnglishDraughtsBoardIntermediates = {

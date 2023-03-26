@@ -9,7 +9,7 @@ import { DraughtsEngine, DraughtsPlayer, DraughtsStatus } from '../core/engine';
 import { EnglishDraughtsEngineStore } from './engine';
 import { EnglishDraughtsAdapter1D } from './game';
 import { cardinality } from './utils';
-import * as Mask from './mask';
+import Mask from './mask';
 
 const statusToPlayer = {
   [DraughtsStatus.LIGHT_WON]: DraughtsPlayer.LIGHT,

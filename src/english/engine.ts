@@ -4,7 +4,7 @@ import type {
   DraughtsEngineStrategy,
 } from '../core/engine';
 import { DraughtsEngine, DraughtsStatus, DraughtsPlayer } from '../core/engine';
-import * as Mask from './mask';
+import Mask from './mask';
 import { EnglishDraughtsMoveGenerator } from './move-generation';
 import { equals, splitBits } from './utils';
 
