@@ -48,19 +48,19 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-unicorn": "^46.0.0",
-    "prettier": "^2.8.5",
-    "publint": "^0.1.10",
-    "release-it": "^15.9.0",
+    "prettier": "^2.8.7",
+    "publint": "^0.1.11",
+    "release-it": "^15.9.3",
     "typescript": "^5.0.2",
     "vite": "^4.2.1",
-    "vite-node": "^0.29.5",
+    "vite-node": "^0.29.7",
     "vite-plugin-dts": "^2.1.0",
-    "vitest": "^0.29.5"
+    "vitest": "^0.29.7"
   },
   "dependencies": {
     "long": "^5.2.1"
