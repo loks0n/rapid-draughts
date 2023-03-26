@@ -1,6 +1,9 @@
 # rapid-draughts ⚡
 
-**rapid-draughts** is a *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engine.
+[![npm version](https://badge.fury.io/js/rapid-draughts.svg)](https://badge.fury.io/js/rapid-draughts)
+![Known Vulnerabilities](https://snyk.io/test/github/loks0n/rapid-draughts/badge.svg)
+
+Aa *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engine.
 
 It uses bitboards, a board representation that holds the draughts board in three 32 or 64 bit unsigned integers. One for the light pieces, dark pieces and the king pieces.
 
