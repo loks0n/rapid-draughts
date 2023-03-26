@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/rapid-draughts.svg)](https://badge.fury.io/js/rapid-draughts)
 ![Known Vulnerabilities](https://snyk.io/test/github/loks0n/rapid-draughts/badge.svg)
+[![Rate this package](https://badges.openbase.com/js/rating/rapid-draughts.svg?token=/77JnIKVV7NQ7BIczx1vhuQkBGB36XeU4yE/bn7qiC4=)](https://openbase.com/js/rapid-draughts?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge)
 
 A *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engine.
 
