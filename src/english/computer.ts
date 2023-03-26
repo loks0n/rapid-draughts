@@ -47,37 +47,42 @@ function evaluateMiddlegame(
     engine.data.player === DraughtsPlayer.LIGHT
       ? engine.data.board.dark
       : engine.data.board.light;
-
-  let evaluation = 0;
-
-  evaluation += cardinality(player) * PIECE_WEIGHT;
-  evaluation -= cardinality(opponent) * PIECE_WEIGHT;
-
-  evaluation += cardinality(player & engine.data.board.king) * KING_WEIGHT;
-  evaluation -= cardinality(opponent & engine.data.board.king) * KING_WEIGHT;
+  const playerKings = player & engine.data.board.king;
+  const opponentKings = opponent & engine.data.board.king;
 
   const back_row =
     engine.data.player === DraughtsPlayer.LIGHT ? Mask.RANK_0 : Mask.RANK_7;
   const opponent_back_row =
     engine.data.player === DraughtsPlayer.LIGHT ? Mask.RANK_7 : Mask.RANK_0;
-  evaluation += cardinality(player & back_row) * BACK_ROW_WEIGHT;
-  evaluation -= cardinality(opponent & opponent_back_row) * BACK_ROW_WEIGHT;
 
-  evaluation +=
-    cardinality(player & Mask.MIDDLE_TWO_RANK_FOUR_FILE) *
-    MIDDLE_TWO_RANK_FOUR_FILE_WEIGHT;
-  evaluation -=
-    cardinality(opponent & Mask.MIDDLE_TWO_RANK_FOUR_FILE) *
-    MIDDLE_TWO_RANK_FOUR_FILE_WEIGHT;
+  const playerPieces = cardinality(player);
+  const opponentPieces = cardinality(opponent);
+  const playerKingsCount = cardinality(playerKings);
+  const opponentKingsCount = cardinality(opponentKings);
+  const playerBackRowCount = cardinality(player & back_row);
+  const opponentBackRowCount = cardinality(opponent & opponent_back_row);
+  const playerMiddleTwoRankFourFileCount = cardinality(
+    player & Mask.MIDDLE_TWO_RANK_FOUR_FILE
+  );
+  const opponentMiddleTwoRankFourFileCount = cardinality(
+    opponent & Mask.MIDDLE_TWO_RANK_FOUR_FILE
+  );
+  const playerMiddleFourRankTwoFileCount = cardinality(
+    player & Mask.MIDDLE_FOUR_RANK_TWO_FILE
+  );
+  const opponentMiddleFourRankTwoFileCount = cardinality(
+    opponent & Mask.MIDDLE_FOUR_RANK_TWO_FILE
+  );
 
-  evaluation +=
-    cardinality(player & Mask.MIDDLE_FOUR_RANK_TWO_FILE) *
-    MIDDLE_FOUR_RANK_TWO_FILE_WEIGHT;
-  evaluation -=
-    cardinality(opponent & Mask.MIDDLE_FOUR_RANK_TWO_FILE) *
-    MIDDLE_FOUR_RANK_TWO_FILE_WEIGHT;
-
-  return evaluation;
+  return (
+    (playerPieces - opponentPieces) * PIECE_WEIGHT +
+    (playerKingsCount - opponentKingsCount) * KING_WEIGHT +
+    (playerBackRowCount - opponentBackRowCount) * BACK_ROW_WEIGHT +
+    (playerMiddleTwoRankFourFileCount - opponentMiddleTwoRankFourFileCount) *
+      MIDDLE_TWO_RANK_FOUR_FILE_WEIGHT +
+    (playerMiddleFourRankTwoFileCount - opponentMiddleFourRankTwoFileCount) *
+      MIDDLE_FOUR_RANK_TWO_FILE_WEIGHT
+  );
 }
 
 export type EnglishDraughtsComputer = DraughtsComputerInstance<
