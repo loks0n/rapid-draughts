@@ -144,6 +144,12 @@ export type EnglishDraughtsGame = DraughtsGame1D<
 >;
 
 export const EnglishDraughts = {
+  /**
+   * Sets up a new English Draughts game
+   * @param data Optional data to initialize the game engine
+   * @param history Optional history to initialize the game
+   * @returns The new English Draughts game
+   */
   setup(
     data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>,
     history?: Partial<DraughtsGameHistory1D>

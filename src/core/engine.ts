@@ -58,18 +58,32 @@ export class DraughtsEngine<T extends Bitboard, E> {
     this.strategy = strategy;
   }
 
+  /**
+   * Returns the current game status
+   */
   get status(): DraughtsStatus {
     return (this._status ??= this.strategy.status(this));
   }
 
+  /**
+   * Returns the available moves
+   */
   get moves(): DraughtsEngineMove<T>[] {
     return (this._moves ??= this.strategy.moves(this));
   }
 
+  /**
+   * Clones the current engine instance
+   * @returns A new cloned engine instance
+   */
   clone(): DraughtsEngine<T, E> {
     return new DraughtsEngine(this.serialize(), this.strategy);
   }
 
+  /**
+   * Serializes the engine data
+   * @returns The serialized engine data
+   */
   serialize(): DraughtsEngineData<T, E> {
     return {
       board: { ...this.data.board },

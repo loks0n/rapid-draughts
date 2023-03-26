@@ -133,6 +133,11 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
 };
 
 export const EnglishDraughtsEngineFactory = {
+  /**
+   * Set up an English Draughts engine with optional data
+   * @param data Optional data for the engine
+   * @returns An English Draughts engine instance
+   */
   setup(data?: Partial<EnglishDraughtsEngineData>): EnglishDraughtsEngine {
     return new DraughtsEngine(
       { ...EnglishDraughtsEngineDefaultData, ...data },

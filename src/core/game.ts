@@ -64,29 +64,45 @@ export class DraughtsGame1D<T extends Bitboard, E> {
     this.adapter = adapter;
   }
 
+  /**
+   * Get the status of the game
+   */
   get status(): DraughtsStatus {
     return this.engine.status;
   }
 
+  /**
+   * Get the current player
+   */
   get player(): DraughtsPlayer {
     return this.engine.data.player;
   }
 
+  /**
+   * Get the 1D representation of the current board
+   */
   get board(): DraughtsBoard1D {
     return (this._board ??= this.adapter.toBoard1D(this.engine.data.board));
   }
 
+  /**
+   * Get the available moves in 1D representation
+   */
   get moves(): DraughtsMove1D[] {
     return (this._moves ??= this.engine.moves.map((engineMove) =>
       this.adapter.toMove1D(engineMove)
     ));
   }
 
-  move(adapterMove: DraughtsMove1D) {
+  /**
+   * Make a move using the 1D representation of a move
+   * @param move The move to make in 1D representation
+   */
+  move(move: DraughtsMove1D) {
     this.history.boards.push(this.board);
-    this.history.moves.push(adapterMove);
+    this.history.moves.push(move);
 
-    const engineMove = this.adapter.toEngineMove(adapterMove);
+    const engineMove = this.adapter.toEngineMove(move);
     this.engine.move(engineMove);
 
     this._board = undefined;
