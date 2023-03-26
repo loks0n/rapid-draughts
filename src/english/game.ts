@@ -53,23 +53,24 @@ const ENGLISH_DRAUGHTS_LAYOUT = [
   S[0],
 ];
 
-const SQUARE_TO_REF: Map<number | undefined, number | undefined> = new Map();
-for (const [squareIndex, square] of ENGLISH_DRAUGHTS_LAYOUT.entries()) {
-  SQUARE_TO_REF.set(square, squareIndex);
-}
+const SQUARE_TO_REF: Map<number | undefined, number | undefined> = new Map(
+  ENGLISH_DRAUGHTS_LAYOUT.map((square, squareIndex) => [square, squareIndex])
+);
 
 export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
   toMove1D(engineMove: DraughtsEngineMove<number>): DraughtsMove1D {
     const origin = SQUARE_TO_REF.get(engineMove.origin);
-    if (origin === undefined) throw new Error('invalid move origin');
+    if (origin === undefined)
+      throw new Error(`invalid move origin: ${engineMove.origin}`);
 
     const destination = SQUARE_TO_REF.get(engineMove.destination);
-    if (destination === undefined) throw new Error('invalid move destination');
+    if (destination === undefined)
+      throw new Error(`invalid move destination: ${engineMove.destination}`);
 
     const captures = [];
     for (const capture of splitBits(engineMove.captures)) {
       const captureRef = SQUARE_TO_REF.get(capture);
-      if (captureRef) captures.push(captureRef);
+      if (captureRef !== undefined) captures.push(captureRef);
     }
 
     return { origin, destination, captures };
@@ -77,15 +78,18 @@ export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
 
   toEngineMove(adapterMove: DraughtsMove1D): DraughtsEngineMove<number> {
     const origin = ENGLISH_DRAUGHTS_LAYOUT[adapterMove.origin];
-    if (origin === undefined) throw new Error('invalid move origin');
+    if (origin === undefined)
+      throw new Error(`invalid move origin: ${adapterMove.origin}`);
 
     const destination = ENGLISH_DRAUGHTS_LAYOUT[adapterMove.destination];
-    if (destination === undefined) throw new Error('invalid move destination');
+    if (destination === undefined)
+      throw new Error(`invalid move destination: ${adapterMove.destination}`);
 
     let captures = 0;
     for (const capture of adapterMove.captures) {
       const square = ENGLISH_DRAUGHTS_LAYOUT[capture];
-      if (square === undefined) throw new Error('invalid move capture');
+      if (square === undefined)
+        throw new Error(`invalid move capture: ${capture}`);
       captures |= square;
     }
     return { origin, destination, captures };
