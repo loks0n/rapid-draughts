@@ -29,6 +29,13 @@ describe('start position', () => {
   test('can make opening move', () => {
     assert.doesNotThrow(() => {
       draughts.move({ origin: 8, destination: 12, captures: [] });
+      assert.equal(draughts.player, DraughtsPlayer.LIGHT);
+    });
+  });
+
+  test('invalid move throws an error', () => {
+    assert.throws(() => {
+      draughts.move({ origin: 8, destination: 14, captures: [] });
     });
   });
 });
