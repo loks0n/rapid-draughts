@@ -2,5 +2,11 @@
   "hooks": {
     "before:init": ["npm run lint", "npm run test"],
     "after:bump": "npm run build"
+  },
+  "git": {
+    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+  },
+  "github": {
+    "release": true
   }
 }
