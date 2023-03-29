@@ -1,6 +1,14 @@
 {
   "hooks": {
-    "before:init": ["npm run lint", "npm run test"],
+    "before:init": ["npm run lint", "npm test"],
     "after:bump": "npm run build"
+  },
+  "github": {
+    "release": true
+  },
+  "plugins": {
+    "@release-it/keep-a-changelog": {
+      "filename": "CHANGELOG.md"
+    }
   }
 }
