@@ -28,14 +28,14 @@
   "types": "./dist/core.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/core.d.ts",
       "import": "./dist/core.js",
-      "require": "./dist/core.cjs",
-      "types": "./dist/core.d.ts"
+      "require": "./dist/core.cjs"
     },
     "./english": {
+      "types": "./dist/english.d.ts",
       "import": "./dist/english.js",
-      "require": "./dist/english.cjs",
-      "types": "./dist/english.d.ts"
+      "require": "./dist/english.cjs"
     }
   },
   "typesVersions": {
