@@ -11,32 +11,43 @@
   },
   "type": "module",
   "files": [
-    "dist/*",
-    "index.d.ts",
-    "core.d.ts",
-    "english.d.ts"
+    "dist"
   ],
   "keywords": [
     "draughts",
     "draughts engine",
+    "draughts validation",
     "checkers",
     "checkers engine",
+    "draughts validation",
     "boardgame",
     "bitboard",
     "english draughts"
   ],
   "module": "./dist/core.js",
+  "types": "./dist/core.d.ts",
   "exports": {
-    "./core": {
+    ".": {
       "import": "./dist/core.js",
-      "require": "./dist/core.cjs"
+      "require": "./dist/core.cjs",
+      "types": "./dist/core.d.ts"
     },
     "./english": {
       "import": "./dist/english.js",
-      "require": "./dist/english.cjs"
+      "require": "./dist/english.cjs",
+      "types": "./dist/english.d.ts"
     }
   },
-  "types": "./index.d.ts",
+  "typesVersions": {
+    ">4.0": {
+      "index": [
+        "./dist/core.d.ts"
+      ],
+      "english": [
+        "./dist/english.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "prepare": "npm run build",
     "prepublishOnly": "publint",

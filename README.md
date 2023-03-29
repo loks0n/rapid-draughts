@@ -19,7 +19,7 @@ rapid-draughts powers the draughts game site [draughts.org](https://draughts.org
 ## How to use
 
 ```typescript
-import { DraughtsPlayer, DraughtsStatus } from 'rapid-draughts/core';
+import { DraughtsPlayer, DraughtsStatus } from 'rapid-draughts';
 import {
   EnglishDraughts as Draughts,
   EnglishDraughtsComputerFactory as ComputerFactory,
