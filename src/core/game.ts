@@ -6,6 +6,7 @@ import type {
   DraughtsEngineMove,
   DraughtsStatus,
 } from './engine';
+import { formatBoard } from './utils';
 
 export type DraughtsPiece1D = {
   readonly king: boolean;
@@ -29,9 +30,9 @@ export type DraughtsSquare1D = DraughtsLightSquare1D | DraughtsDarkSquare1D;
 export type DraughtsBoard1D = DraughtsSquare1D[];
 
 export type DraughtsMove1D = {
-  origin: number;
-  destination: number;
-  captures: number[];
+  readonly origin: number;
+  readonly destination: number;
+  readonly captures: number[];
 };
 
 export type DraughtsGameHistory1D = {
@@ -123,32 +124,7 @@ export class DraughtsGame1D<T extends Bitboard, E> {
     this._moves = undefined;
   }
 
-  toString() {
-    const boardSize = Math.floor(Math.sqrt(this.board.length));
-    const div = '-'.repeat(1 + boardSize * 4);
-    let str = `${div}\n`;
-
-    for (const [ref, square] of this.board.entries()) {
-      // is start of row
-      if (ref % boardSize === 0) {
-        str += `|`;
-      }
-
-      // output square
-      if (square.piece) {
-        let char = square.piece.player === DraughtsPlayer.LIGHT ? 'x' : 'o';
-        char = square.piece.king ? char.toUpperCase() : char;
-        str += ` ${char} |`;
-      } else {
-        str += '   |';
-      }
-
-      // is end of row
-      if (ref % boardSize === boardSize - 1) {
-        str += ` \n${div}\n`;
-      }
-    }
-
-    return str;
+  asciiBoard() {
+    return formatBoard(this.board);
   }
 }

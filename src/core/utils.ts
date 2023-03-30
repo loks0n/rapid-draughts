@@ -1,4 +1,5 @@
-import { Bitboard, DraughtsEngineMove } from './engine';
+import { DraughtsBoard1D } from '../../dist/core';
+import { Bitboard, DraughtsEngineMove, DraughtsPlayer } from './engine';
 import { DraughtsMove1D } from './game';
 
 export function compareMove(
@@ -41,4 +42,33 @@ export function comparePartialMove1D(
     return false;
   }
   return true;
+}
+
+export function formatBoard(board: DraughtsBoard1D) {
+  const boardSize = Math.floor(Math.sqrt(board.length));
+  const div = '-'.repeat(1 + boardSize * 4);
+  let str = `${div}\n`;
+
+  for (const [ref, square] of board.entries()) {
+    // is start of row
+    if (ref % boardSize === 0) {
+      str += `|`;
+    }
+
+    // output square
+    if (square.piece) {
+      let char = square.piece.player === DraughtsPlayer.LIGHT ? 'x' : 'o';
+      char = square.piece.king ? char.toUpperCase() : char;
+      str += ` ${char} |`;
+    } else {
+      str += '   |';
+    }
+
+    // is end of row
+    if (ref % boardSize === boardSize - 1) {
+      str += ` \n${div}\n`;
+    }
+  }
+
+  return str;
 }

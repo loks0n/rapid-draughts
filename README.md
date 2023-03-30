@@ -43,7 +43,7 @@ const strongComputer = ComputerFactory.alphaBeta({
 
 // Play with the AIs until there is a winner
 while (draughts.status === DraughtsStatus.PLAYING) {
-  console.log(`${draughts.toString()}`);
+  console.log(`${draughts.asciiBoard()}`);
   console.log(`to_move = ${draughts.player}`);
   const move =
     draughts.player === DraughtsPlayer.LIGHT
@@ -54,10 +54,9 @@ while (draughts.status === DraughtsStatus.PLAYING) {
 }
 
 // Announce the winner
-console.log(`${draughts.toString()}`);
+console.log(`${draughts.asciiBoard()}`);
 console.log(`status = ${draughts.status}`);
 console.log(`ended after ${draughts.history.moves.length} moves`);
-
 ```
 
 ## Online Demo
