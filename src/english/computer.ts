@@ -1,6 +1,6 @@
 import {
+  DraughtsComputerFactory,
   DraughtsComputer,
-  DraughtsComputerInstance,
   SearchEvaluationFunction,
 } from '../computer/computer';
 import { alphaBeta, AlphaBetaOptions } from '../computer/alpha-beta';
@@ -16,6 +16,12 @@ const statusToPlayer = {
   [DraughtsStatus.DARK_WON]: DraughtsPlayer.DARK,
 };
 
+/**
+ * Evaluation function for the English Draughts game
+ *
+ * @param {DraughtsEngine<number, EnglishDraughtsEngineStore>} engine - The game engine
+ * @returns {number} - Evaluation score for the given position
+ */
 export const evaluate: SearchEvaluationFunction<
   number,
   EnglishDraughtsEngineStore
@@ -85,19 +91,28 @@ function evaluateMiddlegame(
   );
 }
 
-export type EnglishDraughtsComputer = DraughtsComputerInstance<
+export type EnglishDraughtsComputer = DraughtsComputer<
   number,
   EnglishDraughtsEngineStore
 >;
 
 export const EnglishDraughtsComputerFactory = {
+  /**
+   * Creates a computer opponent with a random strategy
+   * @returns {EnglishDraughtsComputer} - A computer opponent with a random strategy
+   */
   random(): EnglishDraughtsComputer {
-    return DraughtsComputer.setup({
+    return DraughtsComputerFactory.setup({
       adapter: EnglishDraughtsAdapter1D,
       strategy: random<number, EnglishDraughtsEngineStore>,
       options: undefined,
     });
   },
+  /**
+   * Creates a computer opponent with an alpha-beta pruning strategy
+   * @param {Partial<AlphaBetaOptions<number, EnglishDraughtsEngineStore>>} options - Options for the alpha-beta pruning strategy
+   * @returns {EnglishDraughtsComputer} - A computer opponent with an alpha-beta pruning strategy
+   */
   alphaBeta(
     options: Partial<AlphaBetaOptions<number, EnglishDraughtsEngineStore>>
   ): EnglishDraughtsComputer {
@@ -110,7 +125,7 @@ export const EnglishDraughtsComputerFactory = {
       evaluationFunction: options.evaluationFunction ?? evaluate,
     };
 
-    return DraughtsComputer.setup({
+    return DraughtsComputerFactory.setup({
       adapter: EnglishDraughtsAdapter1D,
       strategy: alphaBeta<number, EnglishDraughtsEngineStore>,
       options: withDefaultOptions,

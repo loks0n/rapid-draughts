@@ -47,6 +47,14 @@ export function alphaBeta<T extends Bitboard, E>({
   return recordMove;
 }
 
+/**
+ * Options for the alpha-beta pruning search algorithm
+ *
+ * @typedef {Object} AlphaBetaOptions
+ * @property {number} maxDepth - Maximum depth of the search tree for the alpha-beta pruning algorithm.
+ * @property {SearchEvaluationFunction<T, E>} evaluationFunction - The evaluation function to be used for scoring game states.
+ * @property {boolean} [quiescence] - Optional flag to enable/disable quiescence search. Defaults to true.
+ */
 type AlphaBetaSearchArguments<T extends Bitboard, E> = {
   data: {
     engine: DraughtsEngine<T, E>;

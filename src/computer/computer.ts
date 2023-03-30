@@ -18,7 +18,7 @@ export type DraughtsComputerStrategy<T extends Bitboard, E, O> = (
   args: DraughtsComputerStrategyArgs<T, E, O>
 ) => DraughtsEngineMove<T>;
 
-export type DraughtsComputerInstance<T extends Bitboard, E> = (
+export type DraughtsComputer<T extends Bitboard, E> = (
   game: DraughtsGame1D<T, E>
 ) => DraughtsMove1D;
 
@@ -28,12 +28,12 @@ export type DraughtsComputerArguments<T extends Bitboard, E, O> = {
   options: O;
 };
 
-export const DraughtsComputer = {
+export const DraughtsComputerFactory = {
   setup<T extends Bitboard, E, O>({
     adapter,
     strategy,
     options,
-  }: DraughtsComputerArguments<T, E, O>): DraughtsComputerInstance<T, E> {
+  }: DraughtsComputerArguments<T, E, O>): DraughtsComputer<T, E> {
     return (game) => {
       const engineMove = strategy({
         options,
