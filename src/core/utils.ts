@@ -1,6 +1,5 @@
-import { DraughtsBoard1D } from '../../dist/core';
 import { Bitboard, DraughtsEngineMove, DraughtsPlayer } from './engine';
-import { DraughtsMove1D } from './game';
+import { DraughtsBoard1D, DraughtsMove1D } from './game';
 
 export function compareMove(
   moveA: DraughtsEngineMove<Bitboard>,
