@@ -4,9 +4,10 @@ import type {
   DraughtsEngineStrategy,
 } from '../core/engine';
 import { DraughtsEngine, DraughtsStatus, DraughtsPlayer } from '../core/engine';
+import { compareMove } from '../core/utils';
 import Mask from './mask';
 import { EnglishDraughtsMoveGenerator } from './move-generation';
-import { equals, splitBits } from './utils';
+import { splitBits } from './utils';
 
 export type EnglishDraughtsEngineStore = {
   readonly sinceCapture: number;
@@ -61,6 +62,10 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
     return DraughtsStatus.PLAYING;
   },
 
+  isValidMove(engine: EnglishDraughtsEngine, move: DraughtsEngineMove<number>) {
+    return engine.moves.some((validMove) => compareMove(move, validMove));
+  },
+
   moves(engine: EnglishDraughtsEngine) {
     const generator = EnglishDraughtsMoveGenerator.fromPlayerAndBoard(
       engine.data.player,
@@ -86,8 +91,8 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
   },
 
   move(engine: EnglishDraughtsEngine, move: DraughtsEngineMove<number>) {
-    if (!engine.moves.some((validMove) => equals(move, validMove))) {
-      throw new Error('invalid move');
+    if (!engine.isValidMove(move)) {
+      throw new Error(`invalid move: ${JSON.stringify(move)}`);
     }
 
     const board = {

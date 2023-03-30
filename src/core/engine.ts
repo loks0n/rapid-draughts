@@ -35,6 +35,10 @@ export type DraughtsEngineData<T extends Bitboard, E> = {
 export type DraughtsEngineStrategy<T extends Bitboard, E> = {
   moves: (engine: DraughtsEngine<T, E>) => DraughtsEngineMove<T>[];
   status: (engine: DraughtsEngine<T, E>) => DraughtsStatus;
+  isValidMove: (
+    engine: DraughtsEngine<T, E>,
+    move: DraughtsEngineMove<T>
+  ) => boolean;
   move: (
     engine: DraughtsEngine<T, E>,
     move: DraughtsEngineMove<T>
@@ -96,5 +100,9 @@ export class DraughtsEngine<T extends Bitboard, E> {
     this.data = this.strategy.move(this, move);
     this._moves = undefined;
     this._status = undefined;
+  }
+
+  isValidMove(move: DraughtsEngineMove<T>): boolean {
+    return this.strategy.isValidMove(this, move);
   }
 }

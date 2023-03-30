@@ -1,5 +1,3 @@
-import { DraughtsEngineMove } from '../core/engine';
-
 const BITS = 32;
 
 const S: Record<number, number> = [];
@@ -34,17 +32,6 @@ export function splitBits(value: number): number[] {
     }
   }
   return split;
-}
-
-export function equals(
-  moveA: DraughtsEngineMove<number>,
-  moveB: DraughtsEngineMove<number>
-): boolean {
-  return (
-    moveA.origin === moveB.origin &&
-    moveA.destination === moveB.destination &&
-    moveA.captures === moveB.captures
-  );
 }
 
 export function cardinality(num: number): number {

@@ -49,10 +49,10 @@ export class DraughtsGame1D<T extends Bitboard, E> {
   engine: DraughtsEngine<T, E>;
   history: DraughtsGameHistory1D;
 
-  private adapter: DraughtsAdapter1D<T>;
-
   private _board: DraughtsBoard1D | undefined;
   private _moves: DraughtsMove1D[] | undefined;
+
+  private readonly adapter: DraughtsAdapter1D<T>;
 
   constructor(
     engine: DraughtsEngine<T, E>,
@@ -72,14 +72,14 @@ export class DraughtsGame1D<T extends Bitboard, E> {
   }
 
   /**
-   * Get the current player
+   * Get the current player to move
    */
   get player(): DraughtsPlayer {
     return this.engine.data.player;
   }
 
   /**
-   * Get the 1D representation of the current board
+   * Get the 1D array representation of the current board
    */
   get board(): DraughtsBoard1D {
     return (this._board ??= this.adapter.toBoard1D(this.engine.data.board));
@@ -95,10 +95,24 @@ export class DraughtsGame1D<T extends Bitboard, E> {
   }
 
   /**
+   * Check if a move is valid
+   * @param move The move to check in 1D representation
+   * @returns True if the move is valid, false otherwise.
+   */
+  isValidMove(move: DraughtsMove1D) {
+    const engineMove = this.adapter.toEngineMove(move);
+    return this.engine.isValidMove(engineMove);
+  }
+
+  /**
    * Make a move using the 1D representation of a move
    * @param move The move to make in 1D representation
    */
   move(move: DraughtsMove1D) {
+    if (!this.isValidMove(move)) {
+      throw new Error(`invalid move: ${JSON.stringify(move)}`);
+    }
+
     this.history.boards.push(this.board);
     this.history.moves.push(move);
 
