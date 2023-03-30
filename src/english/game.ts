@@ -16,7 +16,7 @@ import {
   EnglishDraughtsEngineStore,
 } from './engine';
 
-import { S, decomposeBits } from './utils';
+import { EnglishDraughtsBitSquare as S, decomposeBits } from './utils';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
   S[11],

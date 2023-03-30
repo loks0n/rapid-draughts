@@ -1,11 +1,11 @@
 const BITS = 32;
 
-const S: Record<number, number> = [];
-S[0] = 1;
+const EnglishDraughtsBitSquare: Record<number, number> = [];
+EnglishDraughtsBitSquare[0] = 1;
 for (let index = 1; index < BITS; index++) {
-  S[index] = S[index - 1] * 2;
+  EnglishDraughtsBitSquare[index] = EnglishDraughtsBitSquare[index - 1] * 2;
 }
-export { S };
+export { EnglishDraughtsBitSquare };
 
 const BIT_MASK = 0xff_ff_ff_ff;
 

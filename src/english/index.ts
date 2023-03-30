@@ -1,5 +1,5 @@
 export { EnglishDraughts, type EnglishDraughtsGame } from './game';
-export { S } from './utils';
+export { EnglishDraughtsBitSquare } from './utils';
 export {
   EnglishDraughtsComputerFactory,
   type EnglishDraughtsComputer,

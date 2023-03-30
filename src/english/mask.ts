@@ -1,4 +1,4 @@
-import { S } from './utils';
+import { EnglishDraughtsBitSquare as S } from './utils';
 
 /* We use the following bitboard layout for English Draughts
  *
@@ -11,7 +11,7 @@ import { S } from './utils';
  *   19  13  07  01
  * 18  12  06  00
  *
- * Access the value of a square with S[n]
+ * Access the uint32 value of a square with S[n]
  *
  * A move forward to the left is a rotate left 7 bits.
  * A move forward to the right is a rotate left 1 bit.
