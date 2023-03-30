@@ -23,7 +23,7 @@ export function rotLeft(value: number, r: number): number {
   return applied >>> 0;
 }
 
-export function splitBits(value: number): number[] {
+export function decomposeBits(value: number): number[] {
   const split: number[] = [];
   for (let bit = 1; value; bit <<= 1) {
     if (value & bit) {

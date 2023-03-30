@@ -16,7 +16,7 @@ import {
   EnglishDraughtsEngineStore,
 } from './engine';
 
-import { S, splitBits } from './utils';
+import { S, decomposeBits } from './utils';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
   S[11],
@@ -68,7 +68,7 @@ export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
       throw new Error(`invalid move destination: ${engineMove.destination}`);
 
     const captures = [];
-    for (const capture of splitBits(engineMove.captures)) {
+    for (const capture of decomposeBits(engineMove.captures)) {
       const captureRef = SQUARE_TO_REF.get(capture);
       if (captureRef !== undefined) captures.push(captureRef);
     }

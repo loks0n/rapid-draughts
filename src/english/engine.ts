@@ -7,7 +7,7 @@ import { DraughtsEngine, DraughtsStatus, DraughtsPlayer } from '../core/engine';
 import { compareMove } from '../core/utils';
 import Mask from './mask';
 import { EnglishDraughtsMoveGenerator } from './move-generation';
-import { splitBits } from './utils';
+import { decomposeBits } from './utils';
 
 export type EnglishDraughtsEngineStore = {
   readonly sinceCapture: number;
@@ -76,14 +76,14 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
 
     const jumpers = generator.getJumpers();
     if (jumpers) {
-      for (const jumper of splitBits(jumpers)) {
+      for (const jumper of decomposeBits(jumpers)) {
         moves.push(...generator.getJumpsFromOrigin(jumper));
       }
       return moves;
     }
 
     const movers = generator.getMovers();
-    for (const mover of splitBits(movers)) {
+    for (const mover of decomposeBits(movers)) {
       moves.push(...generator.getMovesFromOrigin(mover));
     }
 
