@@ -4,7 +4,7 @@
   "version": "0.9.0",
   "license": "MIT",
   "homepage": "https://github.com/loks0n/rapid-draughts#readme",
-  "description": "A super speedy, blazing fast, rocket-powered TypeScript draughts/checkers engine.",
+  "description": "A super speedy, blazing fast, rocket-powered TypeScript draughts/checkers engine with move validation, AI and game history.",
   "repository": {
     "type": "git",
     "url": "https://github.com/loks0n/rapid-draughts.git"

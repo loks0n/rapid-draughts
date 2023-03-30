@@ -4,19 +4,20 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/loks0n/rapid-draughts/badge.svg)
 [![Rate this package](https://badges.openbase.com/js/rating/rapid-draughts.svg?token=/77JnIKVV7NQ7BIczx1vhuQkBGB36XeU4yE/bn7qiC4=)](https://openbase.com/js/rapid-draughts?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge)
 
-A *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engine.
+A *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engine with move validation, AI and game history.
 
-It uses bitboards, a board representation that holds the draughts board in three 32 or 64 bit unsigned integers. One for the light pieces, dark pieces and the king pieces.
+It uses bitboards, a board representation that holds the draughts board in three 32 or 64 bit unsigned integers. One for the light pieces, dark pieces and the king pieces. Bitboards enable fast move generation and have minimal memory usage.
 
-Bitboards enable fast move generation and have minimal memory usage.
+The english draughts / american checkers engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).
 
-The engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).
+## Installing
 
-## Demo
+Run the following command inside your node project:
+```bash
+npm install rapid-draughts
+```
 
-rapid-draughts powers the draughts game site [draughts.org](https://draughts.org/). Check it out!
-
-## How to use
+## How To Use
 
 ```typescript
 import { DraughtsPlayer, DraughtsStatus } from 'rapid-draughts';
@@ -56,3 +57,7 @@ console.log(`status = ${draughts.status}`);
 console.log(`ended after ${draughts.history.moves.length} moves`);
 
 ```
+
+## Online Demo
+
+rapid-draughts powers the draughts game site [draughts.org](https://draughts.org/). Check it out!
