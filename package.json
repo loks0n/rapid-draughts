@@ -9,7 +9,6 @@
     "type": "git",
     "url": "https://github.com/loks0n/rapid-draughts.git"
   },
-  "type": "module",
   "files": [
     "dist"
   ],
@@ -24,19 +23,19 @@
     "bitboard",
     "english draughts"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./english": {
       "types": "./dist/english.d.ts",
-      "import": "./dist/english.js",
-      "require": "./dist/english.cjs"
+      "import": "./dist/english.mjs",
+      "require": "./dist/english.js"
     }
   },
   "typesVersions": {
@@ -69,8 +68,8 @@
     "eslint-plugin-unicorn": "^46.0.0",
     "prettier": "^2.8.7",
     "publint": "^0.1.11",
-    "release-it": "^15.9.3",
-    "typescript": "^5.0.2",
+    "release-it": "^15.10.0",
+    "typescript": "^5.0.3",
     "vite": "^4.2.1",
     "vite-node": "^0.29.8",
     "vite-plugin-dts": "^2.1.0",
