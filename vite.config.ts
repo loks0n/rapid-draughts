@@ -5,7 +5,10 @@ export default defineConfig({
   build: {
     sourcemap: true,
     lib: {
-      entry: { core: './src/core/index.ts', english: './src/english/index.ts' },
+      entry: {
+        index: './src/core/index.ts',
+        english: './src/english/index.ts',
+      },
       formats: ['es', 'cjs'],
     },
   },
