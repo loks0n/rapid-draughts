@@ -214,6 +214,36 @@ describe('tricky move', () => {
   });
 });
 
+describe('tricky move 2', () => {
+  let engine: EnglishDraughtsEngine;
+
+  beforeEach(() => {
+    engine = EngineFactory.setup({
+      board: {
+        light: S[12],
+        dark: S[31],
+        king: 0,
+      },
+      player: DraughtsPlayer.DARK,
+    });
+  });
+
+  test('correct moves', () => {
+    assert.sameDeepMembers(engine.moves, [
+      {
+        origin: S[31],
+        destination: S[30],
+        captures: 0,
+      },
+      {
+        origin: S[31],
+        destination: S[24],
+        captures: 0,
+      },
+    ]);
+  });
+});
+
 describe('simple jump', () => {
   let engine: EnglishDraughtsEngine;
 
