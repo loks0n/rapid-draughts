@@ -10,14 +10,12 @@ export type AlphaBetaOptions<T extends Bitboard, E> = {
   quiescence?: boolean;
 };
 
-export function alphaBeta<T extends Bitboard, E>({
+export async function alphaBeta<T extends Bitboard, E>({
   options: { maxDepth, evaluationFunction, quiescence = true },
   engine,
-}: DraughtsComputerStrategyArgs<
-  T,
-  E,
-  AlphaBetaOptions<T, E>
->): DraughtsEngineMove<T> {
+}: DraughtsComputerStrategyArgs<T, E, AlphaBetaOptions<T, E>>): Promise<
+  DraughtsEngineMove<T>
+> {
   let recordEvaluation = Number.NEGATIVE_INFINITY;
   let recordMove: DraughtsEngineMove<T> | undefined;
 
@@ -25,15 +23,15 @@ export function alphaBeta<T extends Bitboard, E>({
     const next = engine.clone();
     next.move(move);
 
-    const evaluation = -alphaBetaSearch({
+    const evaluation = -(await alphaBetaSearch({
       data: {
         engine: next,
         alpha: Number.NEGATIVE_INFINITY,
         beta: Number.POSITIVE_INFINITY,
         depth: maxDepth - 1,
       },
-      options: { evaluationFunction, quiescence: quiescence },
-    });
+      options: { evaluationFunction, quiescence },
+    }));
     if (evaluation >= recordEvaluation) {
       recordEvaluation = evaluation;
       recordMove = move;
@@ -65,7 +63,7 @@ type AlphaBetaSearchArguments<T extends Bitboard, E> = {
   options: Omit<AlphaBetaOptions<T, E>, 'maxDepth'>;
 };
 
-function alphaBetaSearch<T extends Bitboard, E>({
+async function alphaBetaSearch<T extends Bitboard, E>({
   data: { engine, alpha, beta, depth },
   options: { evaluationFunction, quiescence },
 }: AlphaBetaSearchArguments<T, E>) {
@@ -81,7 +79,7 @@ function alphaBetaSearch<T extends Bitboard, E>({
     const next = engine.clone();
     next.move(move);
 
-    const evaluation = -alphaBetaSearch({
+    const evaluation = -(await alphaBetaSearch({
       data: {
         engine: next,
         alpha: -beta,
@@ -89,7 +87,7 @@ function alphaBetaSearch<T extends Bitboard, E>({
         depth: depth - 1,
       },
       options: { evaluationFunction, quiescence: quiescence },
-    });
+    }));
     if (evaluation >= beta) return beta;
     alpha = Math.max(evaluation, alpha);
   }
@@ -108,7 +106,7 @@ interface QuiescenceSearchArguments<T extends Bitboard, E> {
   };
 }
 
-function quiescenceSearch<T extends Bitboard, E>({
+async function quiescenceSearch<T extends Bitboard, E>({
   data: { engine, alpha, beta },
   options: { evaluationFunction },
 }: QuiescenceSearchArguments<T, E>) {
@@ -121,10 +119,11 @@ function quiescenceSearch<T extends Bitboard, E>({
     const next = engine.clone();
     next.move(move);
 
-    const nextEvaluation = -quiescenceSearch({
+    const nextEvaluation = -(await quiescenceSearch({
       data: { engine: next, alpha: -beta, beta: -alpha },
       options: { evaluationFunction },
-    });
+    }));
+
     if (nextEvaluation >= beta) return beta;
     alpha = Math.max(nextEvaluation, alpha);
   }

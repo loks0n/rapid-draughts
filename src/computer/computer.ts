@@ -16,11 +16,11 @@ export type DraughtsComputerStrategyArgs<T extends Bitboard, E, O> = {
 
 export type DraughtsComputerStrategy<T extends Bitboard, E, O> = (
   args: DraughtsComputerStrategyArgs<T, E, O>
-) => DraughtsEngineMove<T>;
+) => Promise<DraughtsEngineMove<T>>;
 
 export type DraughtsComputer<T extends Bitboard, E> = (
   game: DraughtsGame1D<T, E>
-) => DraughtsMove1D;
+) => Promise<DraughtsMove1D>;
 
 export type DraughtsComputerArguments<T extends Bitboard, E, O> = {
   adapter: DraughtsAdapter1D<T>;
@@ -34,8 +34,8 @@ export const DraughtsComputerFactory = {
     strategy,
     options,
   }: DraughtsComputerArguments<T, E, O>): DraughtsComputer<T, E> {
-    return (game) => {
-      const engineMove = strategy({
+    return async (game) => {
+      const engineMove = await strategy({
         options,
         engine: game.engine,
       });

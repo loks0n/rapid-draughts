@@ -21,11 +21,11 @@ const strongComputer = ComputerFactory.alphaBeta({
 while (draughts.status === DraughtsStatus.PLAYING) {
   console.log(`${draughts.asciiBoard()}`);
   console.log(`to_move = ${draughts.player}`);
-  const move =
-    draughts.player === DraughtsPlayer.LIGHT
-      ? weakComputer(draughts)
-      : strongComputer(draughts);
 
+  const computerPlayer =
+    draughts.player === DraughtsPlayer.LIGHT ? weakComputer : strongComputer;
+
+  const move = await computerPlayer(draughts);
   if (move) draughts.move(move);
 }
 
