@@ -8,7 +8,7 @@
     "email": "22452787+loks0n@users.noreply.github.com",
     "url": "https://loks0n.dev"
   },
-  "homepage": "https://github.com/loks0n/rapid-draughts#readme",
+  "homepage": "https://loks0n.dev/projects/rapid-draughts",
   "description": "A super speedy, blazing fast, rocket-powered TypeScript draughts/checkers engine with move validation, AI and game history.",
   "repository": {
     "type": "git",
