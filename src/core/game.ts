@@ -40,25 +40,25 @@ export type DraughtsGameHistory1D = {
   boards: DraughtsBoard1D[];
 };
 
-export type DraughtsAdapter1D<T extends Bitboard> = {
-  toMove1D: (engineMove: DraughtsEngineMove<T>) => DraughtsMove1D;
-  toEngineMove: (move1D: DraughtsMove1D) => DraughtsEngineMove<T>;
-  toBoard1D: (engineBoard: DraughtsEngineBoard<T>) => DraughtsBoard1D;
+export type DraughtsAdapter1D<TBitboard extends Bitboard> = {
+  toMove1D: (engineMove: DraughtsEngineMove<TBitboard>) => DraughtsMove1D;
+  toEngineMove: (move1D: DraughtsMove1D) => DraughtsEngineMove<TBitboard>;
+  toBoard1D: (engineBoard: DraughtsEngineBoard<TBitboard>) => DraughtsBoard1D;
 };
 
-export class DraughtsGame1D<T extends Bitboard, E> {
-  engine: DraughtsEngine<T, E>;
+export class DraughtsGame1D<TBitboard extends Bitboard, TStore> {
+  engine: DraughtsEngine<TBitboard, TStore>;
   history: DraughtsGameHistory1D;
 
   private _board: DraughtsBoard1D | undefined;
   private _moves: DraughtsMove1D[] | undefined;
 
-  private readonly adapter: DraughtsAdapter1D<T>;
+  private readonly adapter: DraughtsAdapter1D<TBitboard>;
 
   constructor(
-    engine: DraughtsEngine<T, E>,
+    engine: DraughtsEngine<TBitboard, TStore>,
     history: DraughtsGameHistory1D,
-    adapter: DraughtsAdapter1D<T>
+    adapter: DraughtsAdapter1D<TBitboard>
   ) {
     this.engine = engine;
     this.history = history;

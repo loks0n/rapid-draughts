@@ -9,16 +9,16 @@ export enum DraughtsStatus {
 
 export type Bitboard = number | Long;
 
-export type DraughtsEngineBoard<T extends Bitboard> = {
-  readonly light: T;
-  readonly dark: T;
-  readonly king: T;
+export type DraughtsEngineBoard<TBitboard extends Bitboard> = {
+  readonly light: TBitboard;
+  readonly dark: TBitboard;
+  readonly king: TBitboard;
 };
 
-export type DraughtsEngineMove<T extends Bitboard> = {
-  readonly origin: T;
-  readonly destination: T;
-  readonly captures: T;
+export type DraughtsEngineMove<TBitboard extends Bitboard> = {
+  readonly origin: TBitboard;
+  readonly destination: TBitboard;
+  readonly captures: TBitboard;
 };
 
 export enum DraughtsPlayer {
@@ -26,37 +26,39 @@ export enum DraughtsPlayer {
   DARK = 'dark',
 }
 
-export type DraughtsEngineData<T extends Bitboard, E> = {
+export type DraughtsEngineData<TBitboard extends Bitboard, E> = {
   player: DraughtsPlayer;
-  board: DraughtsEngineBoard<T>;
+  board: DraughtsEngineBoard<TBitboard>;
   store: E;
 };
 
-export type DraughtsEngineStrategy<T extends Bitboard, E> = {
-  moves: (engine: DraughtsEngine<T, E>) => DraughtsEngineMove<T>[];
-  status: (engine: DraughtsEngine<T, E>) => DraughtsStatus;
+export type DraughtsEngineStrategy<TBitboard extends Bitboard, TStore> = {
+  moves: (
+    engine: DraughtsEngine<TBitboard, TStore>
+  ) => DraughtsEngineMove<TBitboard>[];
+  status: (engine: DraughtsEngine<TBitboard, TStore>) => DraughtsStatus;
   isValidMove: (
-    engine: DraughtsEngine<T, E>,
-    move: DraughtsEngineMove<T>
+    engine: DraughtsEngine<TBitboard, TStore>,
+    move: DraughtsEngineMove<TBitboard>
   ) => boolean;
   move: (
-    engine: DraughtsEngine<T, E>,
-    move: DraughtsEngineMove<T>
-  ) => DraughtsEngineData<T, E>;
-  serializeStore: (store: E) => E;
+    engine: DraughtsEngine<TBitboard, TStore>,
+    move: DraughtsEngineMove<TBitboard>
+  ) => DraughtsEngineData<TBitboard, TStore>;
+  serializeStore: (store: TStore) => TStore;
 };
 
-export class DraughtsEngine<T extends Bitboard, E> {
-  data: DraughtsEngineData<T, E>;
+export class DraughtsEngine<TBitboard extends Bitboard, TStore> {
+  data: DraughtsEngineData<TBitboard, TStore>;
 
-  private strategy: DraughtsEngineStrategy<T, E>;
+  private strategy: DraughtsEngineStrategy<TBitboard, TStore>;
 
-  private _moves: DraughtsEngineMove<T>[] | undefined;
+  private _moves: DraughtsEngineMove<TBitboard>[] | undefined;
   private _status: DraughtsStatus | undefined;
 
   constructor(
-    data: DraughtsEngineData<T, E>,
-    strategy: DraughtsEngineStrategy<T, E>
+    data: DraughtsEngineData<TBitboard, TStore>,
+    strategy: DraughtsEngineStrategy<TBitboard, TStore>
   ) {
     this.data = data;
     this.strategy = strategy;
@@ -72,7 +74,7 @@ export class DraughtsEngine<T extends Bitboard, E> {
   /**
    * Returns the available moves
    */
-  get moves(): DraughtsEngineMove<T>[] {
+  get moves(): DraughtsEngineMove<TBitboard>[] {
     return (this._moves ??= this.strategy.moves(this));
   }
 
@@ -80,7 +82,7 @@ export class DraughtsEngine<T extends Bitboard, E> {
    * Clones the current engine instance
    * @returns A new cloned engine instance
    */
-  clone(): DraughtsEngine<T, E> {
+  clone(): DraughtsEngine<TBitboard, TStore> {
     return new DraughtsEngine(this.serialize(), this.strategy);
   }
 
@@ -88,7 +90,7 @@ export class DraughtsEngine<T extends Bitboard, E> {
    * Serializes the engine data
    * @returns The serialized engine data
    */
-  serialize(): DraughtsEngineData<T, E> {
+  serialize(): DraughtsEngineData<TBitboard, TStore> {
     return {
       board: { ...this.data.board },
       store: this.strategy.serializeStore(this.data.store),
@@ -96,13 +98,13 @@ export class DraughtsEngine<T extends Bitboard, E> {
     };
   }
 
-  move(move: DraughtsEngineMove<T>): void {
+  move(move: DraughtsEngineMove<TBitboard>): void {
     this.data = this.strategy.move(this, move);
     this._moves = undefined;
     this._status = undefined;
   }
 
-  isValidMove(move: DraughtsEngineMove<T>): boolean {
+  isValidMove(move: DraughtsEngineMove<TBitboard>): boolean {
     return this.strategy.isValidMove(this, move);
   }
 }
