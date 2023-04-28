@@ -45,6 +45,8 @@ const MIDDLE_FOUR_RANK_TWO_FILE = S[29] | S[22] | S[21] | S[14];
 
 const Mask = {
   BOARD,
+  RANK_0,
+  RANK_7,
   FORWARD_LEFT,
   FORWARD_RIGHT,
   BACKWARD_LEFT,

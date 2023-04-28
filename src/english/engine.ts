@@ -6,7 +6,7 @@ import type {
 import { DraughtsEngine, DraughtsStatus, DraughtsPlayer } from '../core/engine';
 import { compareMove } from '../core/utils';
 import Mask from './mask';
-import { EnglishDraughtsMoveGenerator } from './move-generation';
+import { EnglishDraughtsMoveGeneratorFactory } from './move-generation';
 import { decomposeBits } from './utils';
 
 export type EnglishDraughtsEngineStore = {
@@ -67,11 +67,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
   },
 
   moves(engine: EnglishDraughtsEngine) {
-    const generator = EnglishDraughtsMoveGenerator.fromPlayerAndBoard(
-      engine.data.player,
-      engine.data.board
-    );
-
+    const generator = EnglishDraughtsMoveGeneratorFactory.fromEngine(engine);
     const moves: DraughtsEngineMove<number>[] = [];
 
     const jumpers = generator.getJumpers();

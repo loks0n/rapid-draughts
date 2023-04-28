@@ -1,8 +1,5 @@
-import {
-  DraughtsEngineBoard,
-  DraughtsEngineMove,
-  DraughtsPlayer,
-} from '../core/engine';
+import { DraughtsEngineMove, DraughtsPlayer } from '../core/engine';
+import { EnglishDraughtsEngine } from './engine';
 import Mask from './mask';
 import { rotLeft, rotRight } from './utils';
 
@@ -14,54 +11,36 @@ export type EnglishDraughtsBoardIntermediates = {
 };
 
 export class EnglishDraughtsMoveGenerator {
-  private forward: number;
-  private backward: number;
-  private opponent: number;
-  private empty: number;
+  private intermediates: EnglishDraughtsBoardIntermediates;
 
-  constructor(args: {
-    forward: number;
-    backward: number;
-    opponent: number;
-    empty: number;
-  }) {
-    this.forward = args.forward;
-    this.backward = args.backward;
-    this.opponent = args.opponent;
-    this.empty = args.empty;
-  }
-
-  static fromPlayerAndBoard(
-    player: DraughtsPlayer,
-    board: DraughtsEngineBoard<number>
-  ) {
-    const forward =
-      player === DraughtsPlayer.LIGHT ? board.light : board.dark & board.king;
-    const backward =
-      player === DraughtsPlayer.LIGHT ? board.light & board.king : board.dark;
-    const opponent = player === DraughtsPlayer.LIGHT ? board.dark : board.light;
-    const empty = ~(board.light | board.dark);
-
-    return new EnglishDraughtsMoveGenerator({
-      forward,
-      backward,
-      opponent,
-      empty,
-    });
+  constructor(intermediates: EnglishDraughtsBoardIntermediates) {
+    this.intermediates = intermediates;
   }
 
   getJumpers(): number {
-    let capture = rotRight(this.empty, 7) & (this.opponent & Mask.FORWARD_LEFT);
-    let jumpers = rotRight(capture, 7) & (this.forward & Mask.FORWARD_LEFT);
+    let capture =
+      rotRight(this.intermediates.empty, 7) &
+      (this.intermediates.opponent & Mask.FORWARD_LEFT);
+    let jumpers =
+      rotRight(capture, 7) & (this.intermediates.forward & Mask.FORWARD_LEFT);
 
-    capture = rotRight(this.empty, 1) & (this.opponent & Mask.FORWARD_RIGHT);
-    jumpers |= rotRight(capture, 1) & (this.forward & Mask.FORWARD_RIGHT);
+    capture =
+      rotRight(this.intermediates.empty, 1) &
+      (this.intermediates.opponent & Mask.FORWARD_RIGHT);
+    jumpers |=
+      rotRight(capture, 1) & (this.intermediates.forward & Mask.FORWARD_RIGHT);
 
-    capture = rotLeft(this.empty, 1) & (this.opponent & Mask.BACKWARD_LEFT);
-    jumpers |= rotLeft(capture, 1) & (this.backward & Mask.BACKWARD_LEFT);
+    capture =
+      rotLeft(this.intermediates.empty, 1) &
+      (this.intermediates.opponent & Mask.BACKWARD_LEFT);
+    jumpers |=
+      rotLeft(capture, 1) & (this.intermediates.backward & Mask.BACKWARD_LEFT);
 
-    capture = rotLeft(this.empty, 7) & (this.opponent & Mask.BACKWARD_RIGHT);
-    jumpers |= rotLeft(capture, 7) & (this.backward & Mask.BACKWARD_RIGHT);
+    capture =
+      rotLeft(this.intermediates.empty, 7) &
+      (this.intermediates.opponent & Mask.BACKWARD_RIGHT);
+    jumpers |=
+      rotLeft(capture, 7) & (this.intermediates.backward & Mask.BACKWARD_RIGHT);
 
     return jumpers;
   }
@@ -69,13 +48,25 @@ export class EnglishDraughtsMoveGenerator {
   getMovers(): number {
     let movers = 0;
 
-    if (this.forward) {
-      movers |= rotRight(this.empty, 7) & this.forward & Mask.FORWARD_LEFT;
-      movers |= rotRight(this.empty, 1) & this.forward & Mask.FORWARD_RIGHT;
+    if (this.intermediates.forward) {
+      movers |=
+        rotRight(this.intermediates.empty, 7) &
+        this.intermediates.forward &
+        Mask.FORWARD_LEFT;
+      movers |=
+        rotRight(this.intermediates.empty, 1) &
+        this.intermediates.forward &
+        Mask.FORWARD_RIGHT;
     }
-    if (this.backward) {
-      movers |= rotLeft(this.empty, 1) & this.backward & Mask.BACKWARD_LEFT;
-      movers |= rotLeft(this.empty, 7) & this.backward & Mask.BACKWARD_RIGHT;
+    if (this.intermediates.backward) {
+      movers |=
+        rotLeft(this.intermediates.empty, 1) &
+        this.intermediates.backward &
+        Mask.BACKWARD_LEFT;
+      movers |=
+        rotLeft(this.intermediates.empty, 7) &
+        this.intermediates.backward &
+        Mask.BACKWARD_RIGHT;
     }
 
     return movers;
@@ -84,25 +75,31 @@ export class EnglishDraughtsMoveGenerator {
   getMovesFromOrigin(origin: number): DraughtsEngineMove<number>[] {
     const moves: DraughtsEngineMove<number>[] = [];
 
-    if (origin & this.forward) {
-      const d1 = (rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
+    if (origin & this.intermediates.forward) {
+      const d1 =
+        (rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.intermediates.empty) >>>
+        0;
       if (d1) {
         moves.push({ origin, destination: d1, captures: 0 });
       }
 
-      const d2 = (rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.empty) >>> 0;
+      const d2 =
+        (rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.intermediates.empty) >>>
+        0;
       if (d2) {
         moves.push({ origin, destination: d2, captures: 0 });
       }
     }
 
-    if (origin & this.backward) {
-      const d3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.empty;
+    if (origin & this.intermediates.backward) {
+      const d3 =
+        rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.intermediates.empty;
       if (d3) {
         moves.push({ origin, destination: d3, captures: 0 });
       }
 
-      const d4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.empty;
+      const d4 =
+        rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.intermediates.empty;
       if (d4) {
         moves.push({ origin, destination: d4, captures: 0 });
       }
@@ -119,7 +116,7 @@ export class EnglishDraughtsMoveGenerator {
       const searchJump = searchStack.pop();
       if (searchJump === undefined) break;
 
-      const nextBoard = this._fromMove({
+      const nextBoard = this.applyUnfinishedCapture({
         ...searchJump,
         origin,
       });
@@ -145,29 +142,37 @@ export class EnglishDraughtsMoveGenerator {
   getSingleJumpFromOrigin(origin: number): DraughtsEngineMove<number>[] {
     const moves: DraughtsEngineMove<number>[] = [];
 
-    if (origin & this.forward) {
-      const c1 = rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.opponent;
-      const d1 = (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.empty) >>> 0;
+    if (origin & this.intermediates.forward) {
+      const c1 =
+        rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.intermediates.opponent;
+      const d1 =
+        (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.intermediates.empty) >>> 0;
       if (d1) {
         moves.push({ origin, destination: d1, captures: c1 });
       }
 
-      const c2 = rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.opponent;
-      const d2 = (rotLeft(c2 & Mask.FORWARD_RIGHT, 1) & this.empty) >>> 0;
+      const c2 =
+        rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.intermediates.opponent;
+      const d2 =
+        (rotLeft(c2 & Mask.FORWARD_RIGHT, 1) & this.intermediates.empty) >>> 0;
       if (d2) {
         moves.push({ origin, destination: d2, captures: c2 });
       }
     }
 
-    if (origin & this.backward) {
-      const c3 = rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.opponent;
-      const d3 = rotRight(c3 & Mask.BACKWARD_LEFT, 1) & this.empty;
+    if (origin & this.intermediates.backward) {
+      const c3 =
+        rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.intermediates.opponent;
+      const d3 =
+        rotRight(c3 & Mask.BACKWARD_LEFT, 1) & this.intermediates.empty;
       if (d3) {
         moves.push({ origin, destination: d3, captures: c3 });
       }
 
-      const c4 = rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.opponent;
-      const d4 = rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & this.empty;
+      const c4 =
+        rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.intermediates.opponent;
+      const d4 =
+        rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & this.intermediates.empty;
       if (d4) {
         moves.push({ origin, destination: d4, captures: c4 });
       }
@@ -176,20 +181,34 @@ export class EnglishDraughtsMoveGenerator {
     return moves;
   }
 
-  private _fromMove(
+  private applyUnfinishedCapture(
     move: DraughtsEngineMove<number>
   ): EnglishDraughtsMoveGenerator {
     return new EnglishDraughtsMoveGenerator({
       forward:
-        this.forward & move.origin
-          ? this.forward | move.destination
-          : this.forward,
+        this.intermediates.forward & move.origin
+          ? this.intermediates.forward | move.destination
+          : this.intermediates.forward,
       backward:
-        this.backward & move.origin
-          ? this.backward | move.destination
-          : this.backward,
-      opponent: this.opponent & ~move.captures,
-      empty: this.empty,
+        this.intermediates.backward & move.origin
+          ? this.intermediates.backward | move.destination
+          : this.intermediates.backward,
+      opponent: this.intermediates.opponent & ~move.captures,
+      empty: this.intermediates.empty,
     });
   }
 }
+
+export const EnglishDraughtsMoveGeneratorFactory = {
+  fromEngine(engine: EnglishDraughtsEngine): EnglishDraughtsMoveGenerator {
+    const { player, board } = engine.data;
+    return new EnglishDraughtsMoveGenerator({
+      forward:
+        player === DraughtsPlayer.LIGHT ? board.light : board.dark & board.king,
+      backward:
+        player === DraughtsPlayer.LIGHT ? board.light & board.king : board.dark,
+      opponent: player === DraughtsPlayer.LIGHT ? board.dark : board.light,
+      empty: ~(board.light | board.dark),
+    });
+  },
+};
