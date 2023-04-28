@@ -17,47 +17,17 @@ import { EnglishDraughtsBitSquare as S } from './utils';
  * A move forward to the right is a rotate left 1 bit.
  */
 
-const BOARD =
-  S[11] |
-  S[5] |
-  S[31] |
-  S[25] |
-  S[10] |
-  S[4] |
-  S[30] |
-  S[24] |
-  S[3] |
-  S[29] |
-  S[23] |
-  S[17] |
-  S[2] |
-  S[28] |
-  S[22] |
-  S[16] |
-  S[27] |
-  S[21] |
-  S[15] |
-  S[9] |
-  S[26] |
-  S[20] |
-  S[14] |
-  S[8] |
-  S[9] |
-  S[3] |
-  S[7] |
-  S[1] |
-  S[18] |
-  S[12] |
-  S[6] |
-  S[0];
-
 const RANK_0 = S[18] | S[12] | S[6] | S[0];
 const RANK_1 = S[19] | S[13] | S[7] | S[1];
 const RANK_2 = S[26] | S[20] | S[14] | S[8];
-
+const RANK_3 = S[27] | S[21] | S[15] | S[9];
+const RANK_4 = S[2] | S[28] | S[22] | S[16];
 const RANK_5 = S[3] | S[29] | S[23] | S[17];
 const RANK_6 = S[10] | S[4] | S[30] | S[24];
 const RANK_7 = S[11] | S[5] | S[31] | S[25];
+
+const BOARD =
+  RANK_0 | RANK_1 | RANK_2 | RANK_3 | RANK_4 | RANK_5 | RANK_6 | RANK_7;
 
 const FILE_0 = S[18] | S[26] | S[2] | S[10];
 const FILE_7 = S[1] | S[9] | S[17] | S[25];
@@ -75,14 +45,6 @@ const MIDDLE_FOUR_RANK_TWO_FILE = S[29] | S[22] | S[21] | S[14];
 
 const Mask = {
   BOARD,
-  RANK_0,
-  RANK_1,
-  RANK_2,
-  RANK_5,
-  RANK_6,
-  RANK_7,
-  FILE_0,
-  FILE_7,
   FORWARD_LEFT,
   FORWARD_RIGHT,
   BACKWARD_LEFT,
