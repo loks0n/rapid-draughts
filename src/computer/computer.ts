@@ -12,7 +12,7 @@ export type SearchEvaluationFunction<TBitboard extends Bitboard, TStore> = (
 export type DraughtsComputerStrategyArgs<
   TBitboard extends Bitboard,
   TStore,
-  TOptions
+  TOptions,
 > = {
   options: TOptions;
   engine: DraughtsEngine<TBitboard, TStore>;
@@ -21,7 +21,7 @@ export type DraughtsComputerStrategyArgs<
 export type DraughtsComputerStrategy<
   TBitboard extends Bitboard,
   TStore,
-  TOptions
+  TOptions,
 > = (
   args: DraughtsComputerStrategyArgs<TBitboard, TStore, TOptions>
 ) => Promise<DraughtsEngineMove<TBitboard>>;
@@ -33,7 +33,7 @@ export type DraughtsComputer<TBitboard extends Bitboard, TStore> = (
 export type DraughtsComputerArguments<
   TBitboard extends Bitboard,
   TStore,
-  TOptions
+  TOptions,
 > = {
   adapter: DraughtsAdapter1D<TBitboard>;
   strategy: DraughtsComputerStrategy<TBitboard, TStore, TOptions>;
