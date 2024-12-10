@@ -46,8 +46,8 @@ export type DraughtsAdapter1D<TBitboard extends Bitboard> = {
   toBoard1D: (engineBoard: DraughtsEngineBoard<TBitboard>) => DraughtsBoard1D;
 };
 
-export class DraughtsGame1D<TBitboard extends Bitboard, TStore> {
-  engine: DraughtsEngine<TBitboard, TStore>;
+export class DraughtsGame1D<TBitboard extends Bitboard> {
+  engine: DraughtsEngine<TBitboard>;
   history: DraughtsGameHistory1D;
 
   private _board: DraughtsBoard1D | undefined;
@@ -56,7 +56,7 @@ export class DraughtsGame1D<TBitboard extends Bitboard, TStore> {
   private readonly adapter: DraughtsAdapter1D<TBitboard>;
 
   constructor(
-    engine: DraughtsEngine<TBitboard, TStore>,
+    engine: DraughtsEngine<TBitboard>,
     history: DraughtsGameHistory1D,
     adapter: DraughtsAdapter1D<TBitboard>
   ) {

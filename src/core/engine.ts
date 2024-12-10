@@ -26,39 +26,41 @@ export enum DraughtsPlayer {
   DARK = 'dark',
 }
 
-export type DraughtsEngineData<TBitboard extends Bitboard, E> = {
+export type DraughtsEngineData<TBitboard extends Bitboard> = {
   player: DraughtsPlayer;
   board: DraughtsEngineBoard<TBitboard>;
-  store: E;
+  stats: {
+    sinceCapture: number;
+    sinceNonKingAdvance: number;
+  }
 };
 
-export type DraughtsEngineStrategy<TBitboard extends Bitboard, TStore> = {
+export type DraughtsEngineStrategy<TBitboard extends Bitboard> = {
   moves: (
-    engine: DraughtsEngine<TBitboard, TStore>
+    engine: DraughtsEngine<TBitboard>
   ) => DraughtsEngineMove<TBitboard>[];
-  status: (engine: DraughtsEngine<TBitboard, TStore>) => DraughtsStatus;
+  status: (engine: DraughtsEngine<TBitboard>) => DraughtsStatus;
   isValidMove: (
-    engine: DraughtsEngine<TBitboard, TStore>,
+    engine: DraughtsEngine<TBitboard>,
     move: DraughtsEngineMove<TBitboard>
   ) => boolean;
   move: (
-    engine: DraughtsEngine<TBitboard, TStore>,
+    engine: DraughtsEngine<TBitboard>,
     move: DraughtsEngineMove<TBitboard>
-  ) => DraughtsEngineData<TBitboard, TStore>;
-  serializeStore: (store: TStore) => TStore;
+  ) => DraughtsEngineData<TBitboard>;
 };
 
-export class DraughtsEngine<TBitboard extends Bitboard, TStore> {
-  data: DraughtsEngineData<TBitboard, TStore>;
+export class DraughtsEngine<TBitboard extends Bitboard> {
+  data: DraughtsEngineData<TBitboard>;
 
-  private strategy: DraughtsEngineStrategy<TBitboard, TStore>;
+  private strategy: DraughtsEngineStrategy<TBitboard>;
 
   private _moves: DraughtsEngineMove<TBitboard>[] | undefined;
   private _status: DraughtsStatus | undefined;
 
   constructor(
-    data: DraughtsEngineData<TBitboard, TStore>,
-    strategy: DraughtsEngineStrategy<TBitboard, TStore>
+    data: DraughtsEngineData<TBitboard>,
+    strategy: DraughtsEngineStrategy<TBitboard>
   ) {
     this.data = data;
     this.strategy = strategy;
@@ -82,7 +84,7 @@ export class DraughtsEngine<TBitboard extends Bitboard, TStore> {
    * Clones the current engine instance
    * @returns A new cloned engine instance
    */
-  clone(): DraughtsEngine<TBitboard, TStore> {
+  clone(): DraughtsEngine<TBitboard> {
     return new DraughtsEngine(this.serialize(), this.strategy);
   }
 
@@ -90,11 +92,11 @@ export class DraughtsEngine<TBitboard extends Bitboard, TStore> {
    * Serializes the engine data
    * @returns The serialized engine data
    */
-  serialize(): DraughtsEngineData<TBitboard, TStore> {
+  serialize(): DraughtsEngineData<TBitboard> {
     return {
       board: { ...this.data.board },
-      store: this.strategy.serializeStore(this.data.store),
       player: this.data.player,
+      stats: { ...this.data.stats },
     };
   }
 

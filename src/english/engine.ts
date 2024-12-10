@@ -9,19 +9,12 @@ import Mask from './mask';
 import { EnglishDraughtsMoveGeneratorFactory } from './move-generation';
 import { decomposeBits } from './utils';
 
-export type EnglishDraughtsEngineStore = {
-  readonly sinceCapture: number;
-  readonly sinceNonKingAdvance: number;
-};
-
 export type EnglishDraughtsEngineData = DraughtsEngineData<
-  number,
-  EnglishDraughtsEngineStore
+  number
 >;
 
 export type EnglishDraughtsEngine = DraughtsEngine<
-  number,
-  EnglishDraughtsEngineStore
+  number
 >;
 
 export const EnglishDraughtsEngineDefaultData: EnglishDraughtsEngineData = {
@@ -31,22 +24,15 @@ export const EnglishDraughtsEngineDefaultData: EnglishDraughtsEngineData = {
     dark: Mask.DARK_START,
     king: 0,
   },
-  store: {
+  stats: {
     sinceCapture: 0,
     sinceNonKingAdvance: 0,
   },
 };
 
 export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
-  number,
-  EnglishDraughtsEngineStore
+  number
 > = {
-  serializeStore(store: EnglishDraughtsEngineStore) {
-    return {
-      ...store,
-    };
-  },
-
   status(engine: EnglishDraughtsEngine) {
     if (engine.moves.length === 0) {
       return engine.data.player === DraughtsPlayer.LIGHT
@@ -54,8 +40,8 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
         : DraughtsStatus.LIGHT_WON;
     }
     if (
-      engine.data.store.sinceCapture >= 40 &&
-      engine.data.store.sinceNonKingAdvance >= 40
+      engine.data.stats.sinceCapture >= 40 &&
+      engine.data.stats.sinceNonKingAdvance >= 40
     ) {
       return DraughtsStatus.DRAW;
     }
@@ -95,7 +81,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
       ...engine.data.board,
     };
 
-    const store = { ...engine.data.store };
+    const stats = { ...engine.data.stats };
 
     board.light &= ~(move.origin | move.captures);
     board.dark &= ~(move.origin | move.captures);
@@ -111,15 +97,15 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
 
     if (engine.data.board.king & move.origin) {
       board.king |= move.destination;
-      store.sinceNonKingAdvance += 1;
+      stats.sinceNonKingAdvance += 1;
     } else {
-      store.sinceNonKingAdvance = 0;
+      stats.sinceNonKingAdvance = 0;
     }
 
     if (move.captures) {
-      store.sinceCapture = 0;
+      stats.sinceCapture = 0;
     } else {
-      store.sinceCapture += 1;
+      stats.sinceCapture += 1;
     }
 
     return {
@@ -128,7 +114,7 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
           ? DraughtsPlayer.DARK
           : DraughtsPlayer.LIGHT,
       board,
-      store,
+      stats,
     };
   },
 };
