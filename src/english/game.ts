@@ -13,7 +13,6 @@ import {
 } from '../core/game';
 import {
   EnglishDraughtsEngineFactory,
-  EnglishDraughtsEngineStore,
 } from './engine';
 
 import { EnglishDraughtsBitSquare as S, decomposeBits } from './utils';
@@ -139,8 +138,7 @@ export const EnglishDraughtsDefaultHistory1D: DraughtsGameHistory1D = {
 };
 
 export type EnglishDraughtsGame = DraughtsGame1D<
-  number,
-  EnglishDraughtsEngineStore
+  number
 >;
 
 export const EnglishDraughts = {
@@ -151,7 +149,7 @@ export const EnglishDraughts = {
    * @returns The new English Draughts game
    */
   setup(
-    data?: Partial<DraughtsEngineData<number, EnglishDraughtsEngineStore>>,
+    data?: Partial<DraughtsEngineData<number>>,
     history?: Partial<DraughtsGameHistory1D>
   ): EnglishDraughtsGame {
     const engine = EnglishDraughtsEngineFactory.setup(data);

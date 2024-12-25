@@ -1,9 +1,9 @@
 import { Bitboard, DraughtsEngineMove } from '../core/engine';
 import { DraughtsComputerStrategyArgs } from './computer';
 
-export async function random<TBitboard extends Bitboard, TStore>({
+export async function random<TBitboard extends Bitboard>({
   engine,
-}: DraughtsComputerStrategyArgs<TBitboard, TStore, undefined>): Promise<
+}: DraughtsComputerStrategyArgs<TBitboard, undefined>): Promise<
   DraughtsEngineMove<TBitboard>
 > {
   if (engine.moves.length === 0) throw new Error('no valid moves');

@@ -4,19 +4,18 @@ import {
 } from './computer';
 import { Bitboard, DraughtsEngine, DraughtsEngineMove } from '../core/engine';
 
-export type AlphaBetaOptions<TBitboard extends Bitboard, TStore> = {
+export type AlphaBetaOptions<TBitboard extends Bitboard> = {
   maxDepth: number;
-  evaluationFunction: SearchEvaluationFunction<TBitboard, TStore>;
+  evaluationFunction: SearchEvaluationFunction<TBitboard>;
   quiescence?: boolean;
 };
 
-export async function alphaBeta<TBitboard extends Bitboard, TStore>({
+export async function alphaBeta<TBitboard extends Bitboard>({
   options: { maxDepth, evaluationFunction, quiescence = true },
   engine,
 }: DraughtsComputerStrategyArgs<
   TBitboard,
-  TStore,
-  AlphaBetaOptions<TBitboard, TStore>
+  AlphaBetaOptions<TBitboard>
 >): Promise<DraughtsEngineMove<TBitboard>> {
   let recordEvaluation = Number.NEGATIVE_INFINITY;
   let recordMove: DraughtsEngineMove<TBitboard> | undefined;
@@ -47,20 +46,20 @@ export async function alphaBeta<TBitboard extends Bitboard, TStore>({
   return recordMove;
 }
 
-type AlphaBetaSearchArguments<TBitboard extends Bitboard, TStore> = {
+type AlphaBetaSearchArguments<TBitboard extends Bitboard> = {
   data: {
-    engine: DraughtsEngine<TBitboard, TStore>;
+    engine: DraughtsEngine<TBitboard>;
     alpha: number;
     beta: number;
     depth: number;
   };
-  options: Omit<AlphaBetaOptions<TBitboard, TStore>, 'maxDepth'>;
+  options: Omit<AlphaBetaOptions<TBitboard>, 'maxDepth'>;
 };
 
-async function alphaBetaSearch<TBitboard extends Bitboard, TStore>({
+async function alphaBetaSearch<TBitboard extends Bitboard>({
   data: { engine, alpha, beta, depth },
   options: { evaluationFunction, quiescence },
-}: AlphaBetaSearchArguments<TBitboard, TStore>) {
+}: AlphaBetaSearchArguments<TBitboard>) {
   if (depth === 0)
     return quiescence
       ? quiescenceSearch({
@@ -89,21 +88,21 @@ async function alphaBetaSearch<TBitboard extends Bitboard, TStore>({
   return alpha;
 }
 
-interface QuiescenceSearchArguments<TBitboard extends Bitboard, TStore> {
+interface QuiescenceSearchArguments<TBitboard extends Bitboard> {
   data: {
-    engine: DraughtsEngine<TBitboard, TStore>;
+    engine: DraughtsEngine<TBitboard>;
     alpha: number;
     beta: number;
   };
   options: {
-    evaluationFunction: SearchEvaluationFunction<TBitboard, TStore>;
+    evaluationFunction: SearchEvaluationFunction<TBitboard>;
   };
 }
 
-async function quiescenceSearch<TBitboard extends Bitboard, TStore>({
+async function quiescenceSearch<TBitboard extends Bitboard>({
   data: { engine, alpha, beta },
   options: { evaluationFunction },
-}: QuiescenceSearchArguments<TBitboard, TStore>) {
+}: QuiescenceSearchArguments<TBitboard>) {
   const evaluation = evaluationFunction(engine);
   if (evaluation >= beta) return beta;
   alpha = Math.max(evaluation, alpha);

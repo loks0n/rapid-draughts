@@ -6,7 +6,6 @@ import {
 import { alphaBeta, AlphaBetaOptions } from '../computer/alpha-beta';
 import { random } from '../computer/random';
 import { DraughtsEngine, DraughtsPlayer, DraughtsStatus } from '../core/engine';
-import { EnglishDraughtsEngineStore } from './engine';
 import { EnglishDraughtsAdapter1D } from './game';
 import { cardinality } from './utils';
 import Mask from './mask';
@@ -19,13 +18,10 @@ const statusToPlayer = {
 /**
  * Evaluation function for the English Draughts game
  *
- * @param {DraughtsEngine<number, EnglishDraughtsEngineStore>} engine - The game engine
+ * @param {DraughtsEngine<number>} engine - The game engine
  * @returns {number} - Evaluation score for the given position
  */
-export const evaluate: SearchEvaluationFunction<
-  number,
-  EnglishDraughtsEngineStore
-> = (engine: DraughtsEngine<number, EnglishDraughtsEngineStore>) => {
+export const evaluate: SearchEvaluationFunction<number> = (engine: DraughtsEngine<number>) => {
   const status = engine.status;
   if (status !== DraughtsStatus.PLAYING) {
     if (status === DraughtsStatus.DRAW) return Number.NEGATIVE_INFINITY;
@@ -43,7 +39,7 @@ const MIDDLE_TWO_RANK_FOUR_FILE_WEIGHT = 25;
 const MIDDLE_FOUR_RANK_TWO_FILE_WEIGHT = 5;
 
 function evaluateMiddlegame(
-  engine: DraughtsEngine<number, EnglishDraughtsEngineStore>
+  engine: DraughtsEngine<number>
 ): number {
   const player =
     engine.data.player === DraughtsPlayer.LIGHT
@@ -91,10 +87,7 @@ function evaluateMiddlegame(
   );
 }
 
-export type EnglishDraughtsComputer = DraughtsComputer<
-  number,
-  EnglishDraughtsEngineStore
->;
+export type EnglishDraughtsComputer = DraughtsComputer<number>;
 
 export const EnglishDraughtsComputerFactory = {
   /**
@@ -104,21 +97,20 @@ export const EnglishDraughtsComputerFactory = {
   random(): EnglishDraughtsComputer {
     return DraughtsComputerFactory.setup({
       adapter: EnglishDraughtsAdapter1D,
-      strategy: random<number, EnglishDraughtsEngineStore>,
+      strategy: random<number>,
       options: undefined,
     });
   },
   /**
    * Creates a computer opponent with an alpha-beta pruning strategy
-   * @param {Partial<AlphaBetaOptions<number, EnglishDraughtsEngineStore>>} options - Options for the alpha-beta pruning strategy
+   * @param {Partial<AlphaBetaOptions<number>>} options - Options for the alpha-beta pruning strategy
    * @returns {EnglishDraughtsComputer} - A computer opponent with an alpha-beta pruning strategy
    */
   alphaBeta(
-    options: Partial<AlphaBetaOptions<number, EnglishDraughtsEngineStore>>
+    options: Partial<AlphaBetaOptions<number>>
   ): EnglishDraughtsComputer {
     const withDefaultOptions: AlphaBetaOptions<
-      number,
-      EnglishDraughtsEngineStore
+      number
     > = {
       maxDepth: options.maxDepth ?? 4,
       quiescence: options.quiescence ?? true,
@@ -127,7 +119,7 @@ export const EnglishDraughtsComputerFactory = {
 
     return DraughtsComputerFactory.setup({
       adapter: EnglishDraughtsAdapter1D,
-      strategy: alphaBeta<number, EnglishDraughtsEngineStore>,
+      strategy: alphaBeta<number>,
       options: withDefaultOptions,
     });
   },
