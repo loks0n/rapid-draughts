@@ -9,13 +9,9 @@ import Mask from './mask';
 import { EnglishDraughtsMoveGeneratorFactory } from './move-generation';
 import { decomposeBits } from './utils';
 
-export type EnglishDraughtsEngineData = DraughtsEngineData<
-  number
->;
+export type EnglishDraughtsEngineData = DraughtsEngineData<number>;
 
-export type EnglishDraughtsEngine = DraughtsEngine<
-  number
->;
+export type EnglishDraughtsEngine = DraughtsEngine<number>;
 
 export const EnglishDraughtsEngineDefaultData: EnglishDraughtsEngineData = {
   player: DraughtsPlayer.DARK,
@@ -30,9 +26,7 @@ export const EnglishDraughtsEngineDefaultData: EnglishDraughtsEngineData = {
   },
 };
 
-export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<
-  number
-> = {
+export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<number> = {
   status(engine: EnglishDraughtsEngine) {
     if (engine.moves.length === 0) {
       return engine.data.player === DraughtsPlayer.LIGHT

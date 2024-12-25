@@ -17,10 +17,7 @@ export type DraughtsComputerStrategyArgs<
   engine: DraughtsEngine<TBitboard>;
 };
 
-export type DraughtsComputerStrategy<
-  TBitboard extends Bitboard,
-  TOptions,
-> = (
+export type DraughtsComputerStrategy<TBitboard extends Bitboard, TOptions> = (
   args: DraughtsComputerStrategyArgs<TBitboard, TOptions>
 ) => Promise<DraughtsEngineMove<TBitboard>>;
 
@@ -28,10 +25,7 @@ export type DraughtsComputer<TBitboard extends Bitboard> = (
   game: DraughtsGame1D<TBitboard>
 ) => Promise<DraughtsMove1D>;
 
-export type DraughtsComputerArguments<
-  TBitboard extends Bitboard,
-  TOptions,
-> = {
+export type DraughtsComputerArguments<TBitboard extends Bitboard, TOptions> = {
   adapter: DraughtsAdapter1D<TBitboard>;
   strategy: DraughtsComputerStrategy<TBitboard, TOptions>;
   options: TOptions;
@@ -42,9 +36,10 @@ export const DraughtsComputerFactory = {
     adapter,
     strategy,
     options,
-  }: DraughtsComputerArguments<TBitboard, TOptions>): DraughtsComputer<
-    TBitboard
-  > {
+  }: DraughtsComputerArguments<
+    TBitboard,
+    TOptions
+  >): DraughtsComputer<TBitboard> {
     return async (game) => {
       const engineMove = await strategy({
         options,

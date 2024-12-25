@@ -21,7 +21,9 @@ const statusToPlayer = {
  * @param {DraughtsEngine<number>} engine - The game engine
  * @returns {number} - Evaluation score for the given position
  */
-export const evaluate: SearchEvaluationFunction<number> = (engine: DraughtsEngine<number>) => {
+export const evaluate: SearchEvaluationFunction<number> = (
+  engine: DraughtsEngine<number>
+) => {
   const status = engine.status;
   if (status !== DraughtsStatus.PLAYING) {
     if (status === DraughtsStatus.DRAW) return Number.NEGATIVE_INFINITY;
@@ -38,9 +40,7 @@ const BACK_ROW_WEIGHT = 40;
 const MIDDLE_TWO_RANK_FOUR_FILE_WEIGHT = 25;
 const MIDDLE_FOUR_RANK_TWO_FILE_WEIGHT = 5;
 
-function evaluateMiddlegame(
-  engine: DraughtsEngine<number>
-): number {
+function evaluateMiddlegame(engine: DraughtsEngine<number>): number {
   const player =
     engine.data.player === DraughtsPlayer.LIGHT
       ? engine.data.board.light
@@ -109,9 +109,7 @@ export const EnglishDraughtsComputerFactory = {
   alphaBeta(
     options: Partial<AlphaBetaOptions<number>>
   ): EnglishDraughtsComputer {
-    const withDefaultOptions: AlphaBetaOptions<
-      number
-    > = {
+    const withDefaultOptions: AlphaBetaOptions<number> = {
       maxDepth: options.maxDepth ?? 4,
       quiescence: options.quiescence ?? true,
       evaluationFunction: options.evaluationFunction ?? evaluate,

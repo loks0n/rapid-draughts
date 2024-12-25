@@ -32,13 +32,11 @@ export type DraughtsEngineData<TBitboard extends Bitboard> = {
   stats: {
     sinceCapture: number;
     sinceNonKingAdvance: number;
-  }
+  };
 };
 
 export type DraughtsEngineStrategy<TBitboard extends Bitboard> = {
-  moves: (
-    engine: DraughtsEngine<TBitboard>
-  ) => DraughtsEngineMove<TBitboard>[];
+  moves: (engine: DraughtsEngine<TBitboard>) => DraughtsEngineMove<TBitboard>[];
   status: (engine: DraughtsEngine<TBitboard>) => DraughtsStatus;
   isValidMove: (
     engine: DraughtsEngine<TBitboard>,

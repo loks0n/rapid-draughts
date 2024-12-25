@@ -11,9 +11,7 @@ import {
   DraughtsGame1D,
   DraughtsGameHistory1D,
 } from '../core/game';
-import {
-  EnglishDraughtsEngineFactory,
-} from './engine';
+import { EnglishDraughtsEngineFactory } from './engine';
 
 import { EnglishDraughtsBitSquare as S, decomposeBits } from './utils';
 
@@ -137,9 +135,7 @@ export const EnglishDraughtsDefaultHistory1D: DraughtsGameHistory1D = {
   boards: [],
 };
 
-export type EnglishDraughtsGame = DraughtsGame1D<
-  number
->;
+export type EnglishDraughtsGame = DraughtsGame1D<number>;
 
 export const EnglishDraughts = {
   /**
