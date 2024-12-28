@@ -1,4 +1,4 @@
-import Long from 'long';
+import { Bitboard } from '../bitwise/types';
 
 export enum DraughtsStatus {
   PLAYING = 'playing',
@@ -6,8 +6,6 @@ export enum DraughtsStatus {
   LIGHT_WON = 'light_won',
   DARK_WON = 'dark_won',
 }
-
-export type Bitboard = number | Long;
 
 export type DraughtsEngineBoard<TBitboard extends Bitboard> = {
   readonly light: TBitboard;

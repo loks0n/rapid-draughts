@@ -2,7 +2,8 @@ import {
   DraughtsComputerStrategyArgs,
   SearchEvaluationFunction,
 } from './computer';
-import { Bitboard, DraughtsEngine, DraughtsEngineMove } from '../core/engine';
+import { DraughtsEngine, DraughtsEngineMove } from '../core/engine';
+import { Bitboard } from '../bitwise/types';
 
 export type AlphaBetaOptions<TBitboard extends Bitboard> = {
   maxDepth: number;

@@ -1,6 +1,6 @@
+import { Bitboard } from '../bitwise/types';
 import { DraughtsPlayer } from './engine';
 import type {
-  Bitboard,
   DraughtsEngine,
   DraughtsEngineBoard,
   DraughtsEngineMove,

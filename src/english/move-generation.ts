@@ -1,7 +1,7 @@
+import { BitwiseNumber } from '../bitwise/number';
 import { DraughtsEngineMove, DraughtsPlayer } from '../core/engine';
 import { EnglishDraughtsEngine } from './engine';
 import Mask from './mask';
-import { rotLeft, rotRight } from './utils';
 
 export type EnglishDraughtsBoardIntermediates = {
   forward: number;
@@ -18,29 +18,50 @@ export class EnglishDraughtsMoveGenerator {
   }
 
   getJumpers(): number {
-    let capture =
-      rotRight(this.intermediates.empty, 7) &
-      (this.intermediates.opponent & Mask.FORWARD_LEFT);
-    let jumpers =
-      rotRight(capture, 7) & (this.intermediates.forward & Mask.FORWARD_LEFT);
+    let capture = BitwiseNumber.and(
+      BitwiseNumber.rotRight(this.intermediates.empty, 7),
+      BitwiseNumber.and(this.intermediates.opponent, Mask.FORWARD_LEFT)
+    );
+    let jumpers = BitwiseNumber.and(
+      BitwiseNumber.rotRight(capture, 7),
+      BitwiseNumber.and(this.intermediates.forward, Mask.FORWARD_LEFT)
+    );
 
-    capture =
-      rotRight(this.intermediates.empty, 1) &
-      (this.intermediates.opponent & Mask.FORWARD_RIGHT);
-    jumpers |=
-      rotRight(capture, 1) & (this.intermediates.forward & Mask.FORWARD_RIGHT);
+    capture = BitwiseNumber.and(
+      BitwiseNumber.rotRight(this.intermediates.empty, 1),
+      BitwiseNumber.and(this.intermediates.opponent, Mask.FORWARD_RIGHT)
+    );
+    jumpers = BitwiseNumber.or(
+      jumpers,
+      BitwiseNumber.and(
+        BitwiseNumber.rotRight(capture, 1),
+        BitwiseNumber.and(this.intermediates.forward, Mask.FORWARD_RIGHT)
+      )
+    );
 
-    capture =
-      rotLeft(this.intermediates.empty, 1) &
-      (this.intermediates.opponent & Mask.BACKWARD_LEFT);
-    jumpers |=
-      rotLeft(capture, 1) & (this.intermediates.backward & Mask.BACKWARD_LEFT);
+    capture = BitwiseNumber.and(
+      BitwiseNumber.rotLeft(this.intermediates.empty, 1),
+      BitwiseNumber.and(this.intermediates.opponent, Mask.BACKWARD_LEFT)
+    );
+    jumpers = BitwiseNumber.or(
+      jumpers,
+      BitwiseNumber.and(
+        BitwiseNumber.rotLeft(capture, 1),
+        BitwiseNumber.and(this.intermediates.backward, Mask.BACKWARD_LEFT)
+      )
+    );
 
-    capture =
-      rotLeft(this.intermediates.empty, 7) &
-      (this.intermediates.opponent & Mask.BACKWARD_RIGHT);
-    jumpers |=
-      rotLeft(capture, 7) & (this.intermediates.backward & Mask.BACKWARD_RIGHT);
+    capture = BitwiseNumber.and(
+      BitwiseNumber.rotLeft(this.intermediates.empty, 7),
+      BitwiseNumber.and(this.intermediates.opponent, Mask.BACKWARD_RIGHT)
+    );
+    jumpers = BitwiseNumber.or(
+      jumpers,
+      BitwiseNumber.and(
+        BitwiseNumber.rotLeft(capture, 7),
+        BitwiseNumber.and(this.intermediates.backward, Mask.BACKWARD_RIGHT)
+      )
+    );
 
     return jumpers;
   }
@@ -49,24 +70,48 @@ export class EnglishDraughtsMoveGenerator {
     let movers = 0;
 
     if (this.intermediates.forward) {
-      movers |=
-        rotRight(this.intermediates.empty, 7) &
-        this.intermediates.forward &
-        Mask.FORWARD_LEFT;
-      movers |=
-        rotRight(this.intermediates.empty, 1) &
-        this.intermediates.forward &
-        Mask.FORWARD_RIGHT;
+      movers = BitwiseNumber.or(
+        movers,
+        BitwiseNumber.and(
+          BitwiseNumber.and(
+            BitwiseNumber.rotRight(this.intermediates.empty, 7),
+            this.intermediates.forward
+          ),
+          Mask.FORWARD_LEFT
+        )
+      );
+      movers = BitwiseNumber.or(
+        movers,
+        BitwiseNumber.and(
+          BitwiseNumber.and(
+            BitwiseNumber.rotRight(this.intermediates.empty, 1),
+            this.intermediates.forward
+          ),
+          Mask.FORWARD_RIGHT
+        )
+      );
     }
     if (this.intermediates.backward) {
-      movers |=
-        rotLeft(this.intermediates.empty, 1) &
-        this.intermediates.backward &
-        Mask.BACKWARD_LEFT;
-      movers |=
-        rotLeft(this.intermediates.empty, 7) &
-        this.intermediates.backward &
-        Mask.BACKWARD_RIGHT;
+      movers = BitwiseNumber.or(
+        movers,
+        BitwiseNumber.and(
+          BitwiseNumber.and(
+            BitwiseNumber.rotLeft(this.intermediates.empty, 1),
+            this.intermediates.backward
+          ),
+          Mask.BACKWARD_LEFT
+        )
+      );
+      movers = BitwiseNumber.or(
+        movers,
+        BitwiseNumber.and(
+          BitwiseNumber.and(
+            BitwiseNumber.rotLeft(this.intermediates.empty, 7),
+            this.intermediates.backward
+          ),
+          Mask.BACKWARD_RIGHT
+        )
+      );
     }
 
     return movers;
@@ -75,31 +120,43 @@ export class EnglishDraughtsMoveGenerator {
   getMovesFromOrigin(origin: number): DraughtsEngineMove<number>[] {
     const moves: DraughtsEngineMove<number>[] = [];
 
-    if (origin & this.intermediates.forward) {
-      const d1 =
-        (rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.intermediates.empty) >>>
-        0;
+    if (BitwiseNumber.and(origin, this.intermediates.forward)) {
+      const d1 = BitwiseNumber.and(
+        BitwiseNumber.rotLeft(BitwiseNumber.and(origin, Mask.FORWARD_LEFT), 7),
+        this.intermediates.empty
+      );
       if (d1) {
         moves.push({ origin, destination: d1, captures: 0 });
       }
 
-      const d2 =
-        (rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.intermediates.empty) >>>
-        0;
+      const d2 = BitwiseNumber.and(
+        BitwiseNumber.rotLeft(BitwiseNumber.and(origin, Mask.FORWARD_RIGHT), 1),
+        this.intermediates.empty
+      );
       if (d2) {
         moves.push({ origin, destination: d2, captures: 0 });
       }
     }
 
-    if (origin & this.intermediates.backward) {
-      const d3 =
-        rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.intermediates.empty;
+    if (BitwiseNumber.and(origin, this.intermediates.backward)) {
+      const d3 = BitwiseNumber.and(
+        BitwiseNumber.rotRight(
+          BitwiseNumber.and(origin, Mask.BACKWARD_LEFT),
+          1
+        ),
+        this.intermediates.empty
+      );
       if (d3) {
         moves.push({ origin, destination: d3, captures: 0 });
       }
 
-      const d4 =
-        rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.intermediates.empty;
+      const d4 = BitwiseNumber.and(
+        BitwiseNumber.rotRight(
+          BitwiseNumber.and(origin, Mask.BACKWARD_RIGHT),
+          7
+        ),
+        this.intermediates.empty
+      );
       if (d4) {
         moves.push({ origin, destination: d4, captures: 0 });
       }
@@ -129,7 +186,7 @@ export class EnglishDraughtsMoveGenerator {
         searchStack.push({
           origin,
           destination: nextJump.destination,
-          captures: searchJump.captures | nextJump.captures,
+          captures: BitwiseNumber.or(searchJump.captures, nextJump.captures),
         });
       }
 
@@ -142,37 +199,59 @@ export class EnglishDraughtsMoveGenerator {
   getSingleJumpFromOrigin(origin: number): DraughtsEngineMove<number>[] {
     const moves: DraughtsEngineMove<number>[] = [];
 
-    if (origin & this.intermediates.forward) {
-      const c1 =
-        rotLeft(origin & Mask.FORWARD_LEFT, 7) & this.intermediates.opponent;
-      const d1 =
-        (rotLeft(c1 & Mask.FORWARD_LEFT, 7) & this.intermediates.empty) >>> 0;
+    if (BitwiseNumber.and(origin, this.intermediates.forward)) {
+      const c1 = BitwiseNumber.and(
+        BitwiseNumber.rotLeft(BitwiseNumber.and(origin, Mask.FORWARD_LEFT), 7),
+        this.intermediates.opponent
+      );
+      const d1 = BitwiseNumber.and(
+        BitwiseNumber.rotLeft(BitwiseNumber.and(c1, Mask.FORWARD_LEFT), 7),
+        this.intermediates.empty
+      );
       if (d1) {
         moves.push({ origin, destination: d1, captures: c1 });
       }
 
-      const c2 =
-        rotLeft(origin & Mask.FORWARD_RIGHT, 1) & this.intermediates.opponent;
-      const d2 =
-        (rotLeft(c2 & Mask.FORWARD_RIGHT, 1) & this.intermediates.empty) >>> 0;
+      const c2 = BitwiseNumber.and(
+        BitwiseNumber.rotLeft(BitwiseNumber.and(origin, Mask.FORWARD_RIGHT), 1),
+        this.intermediates.opponent
+      );
+      const d2 = BitwiseNumber.and(
+        BitwiseNumber.rotLeft(BitwiseNumber.and(c2, Mask.FORWARD_RIGHT), 1),
+        this.intermediates.empty
+      );
       if (d2) {
         moves.push({ origin, destination: d2, captures: c2 });
       }
     }
 
-    if (origin & this.intermediates.backward) {
-      const c3 =
-        rotRight(origin & Mask.BACKWARD_LEFT, 1) & this.intermediates.opponent;
-      const d3 =
-        rotRight(c3 & Mask.BACKWARD_LEFT, 1) & this.intermediates.empty;
+    if (BitwiseNumber.and(origin, this.intermediates.backward)) {
+      const c3 = BitwiseNumber.and(
+        BitwiseNumber.rotRight(
+          BitwiseNumber.and(origin, Mask.BACKWARD_LEFT),
+          1
+        ),
+        this.intermediates.opponent
+      );
+      const d3 = BitwiseNumber.and(
+        BitwiseNumber.rotRight(BitwiseNumber.and(c3, Mask.BACKWARD_LEFT), 1),
+        this.intermediates.empty
+      );
       if (d3) {
         moves.push({ origin, destination: d3, captures: c3 });
       }
 
-      const c4 =
-        rotRight(origin & Mask.BACKWARD_RIGHT, 7) & this.intermediates.opponent;
-      const d4 =
-        rotRight(c4 & Mask.BACKWARD_RIGHT, 7) & this.intermediates.empty;
+      const c4 = BitwiseNumber.and(
+        BitwiseNumber.rotRight(
+          BitwiseNumber.and(origin, Mask.BACKWARD_RIGHT),
+          7
+        ),
+        this.intermediates.opponent
+      );
+      const d4 = BitwiseNumber.and(
+        BitwiseNumber.rotRight(BitwiseNumber.and(c4, Mask.BACKWARD_RIGHT), 7),
+        this.intermediates.empty
+      );
       if (d4) {
         moves.push({ origin, destination: d4, captures: c4 });
       }
@@ -185,15 +264,16 @@ export class EnglishDraughtsMoveGenerator {
     move: DraughtsEngineMove<number>
   ): EnglishDraughtsMoveGenerator {
     return new EnglishDraughtsMoveGenerator({
-      forward:
-        this.intermediates.forward & move.origin
-          ? this.intermediates.forward | move.destination
-          : this.intermediates.forward,
-      backward:
-        this.intermediates.backward & move.origin
-          ? this.intermediates.backward | move.destination
-          : this.intermediates.backward,
-      opponent: this.intermediates.opponent & ~move.captures,
+      forward: BitwiseNumber.and(this.intermediates.forward, move.origin)
+        ? BitwiseNumber.or(this.intermediates.forward, move.destination)
+        : this.intermediates.forward,
+      backward: BitwiseNumber.and(this.intermediates.backward, move.origin)
+        ? BitwiseNumber.or(this.intermediates.backward, move.destination)
+        : this.intermediates.backward,
+      opponent: BitwiseNumber.and(
+        this.intermediates.opponent,
+        BitwiseNumber.not(move.captures)
+      ),
       empty: this.intermediates.empty,
     });
   }
@@ -204,11 +284,15 @@ export const EnglishDraughtsMoveGeneratorFactory = {
     const { player, board } = engine.data;
     return new EnglishDraughtsMoveGenerator({
       forward:
-        player === DraughtsPlayer.LIGHT ? board.light : board.dark & board.king,
+        player === DraughtsPlayer.LIGHT
+          ? board.light
+          : BitwiseNumber.and(board.dark, board.king),
       backward:
-        player === DraughtsPlayer.LIGHT ? board.light & board.king : board.dark,
+        player === DraughtsPlayer.LIGHT
+          ? BitwiseNumber.and(board.light, board.king)
+          : board.dark,
       opponent: player === DraughtsPlayer.LIGHT ? board.dark : board.light,
-      empty: ~(board.light | board.dark),
+      empty: BitwiseNumber.not(BitwiseNumber.or(board.light, board.dark)),
     });
   },
 };

@@ -1,4 +1,5 @@
-import { Bitboard, DraughtsEngine, DraughtsEngineMove } from '../core/engine';
+import { Bitboard } from '../bitwise/types';
+import { DraughtsEngine, DraughtsEngineMove } from '../core/engine';
 import {
   DraughtsAdapter1D,
   DraughtsGame1D,

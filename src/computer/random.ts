@@ -1,4 +1,5 @@
-import { Bitboard, DraughtsEngineMove } from '../core/engine';
+import { Bitboard } from '../bitwise/types';
+import { DraughtsEngineMove } from '../core/engine';
 import { DraughtsComputerStrategyArgs } from './computer';
 
 export async function random<TBitboard extends Bitboard>({

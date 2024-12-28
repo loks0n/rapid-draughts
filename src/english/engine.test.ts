@@ -1,11 +1,12 @@
 import { describe, beforeEach, test, assert } from 'vitest';
 import { DraughtsPlayer } from '../core/engine';
-
 import {
   EnglishDraughtsEngineFactory as EngineFactory,
   EnglishDraughtsEngine,
 } from './engine';
+
 import { EnglishDraughtsBitSquare as S } from './utils';
+import { BitwiseNumber } from '../bitwise/number';
 
 /* We use the following bitboard layout for English Draughts
  *
@@ -79,20 +80,23 @@ describe('possible openings', () => {
       captures: 0,
     });
     assert.equal(engine.data.player, DraughtsPlayer.LIGHT);
+
     assert.equal(
       engine.data.board.dark,
-      S[2] |
-        S[29] |
-        S[23] |
-        S[17] |
-        S[10] |
-        S[4] |
-        S[30] |
-        S[24] |
-        S[11] |
-        S[5] |
-        S[31] |
+      BitwiseNumber.or(
+        S[2],
+        S[29],
+        S[23],
+        S[17],
+        S[10],
+        S[4],
+        S[30],
+        S[24],
+        S[11],
+        S[5],
+        S[31],
         S[25]
+      )
     );
     assert.equal(engine.data.board.king, 0);
   });

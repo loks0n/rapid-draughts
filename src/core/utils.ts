@@ -1,4 +1,5 @@
-import { Bitboard, DraughtsEngineMove, DraughtsPlayer } from './engine';
+import { Bitboard } from '../bitwise/types';
+import { DraughtsEngineMove, DraughtsPlayer } from './engine';
 import { DraughtsBoard1D, DraughtsMove1D } from './game';
 
 export function compareMove(

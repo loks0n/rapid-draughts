@@ -1,3 +1,4 @@
+import { BitwiseNumber } from '../bitwise/number';
 import {
   DraughtsEngineBoard,
   DraughtsEngineData,
@@ -13,7 +14,7 @@ import {
 } from '../core/game';
 import { EnglishDraughtsEngineFactory } from './engine';
 
-import { EnglishDraughtsBitSquare as S, decomposeBits } from './utils';
+import { EnglishDraughtsBitSquare as S } from './utils';
 
 const ENGLISH_DRAUGHTS_LAYOUT = [
   S[11],
@@ -65,7 +66,7 @@ export const EnglishDraughtsAdapter1D: DraughtsAdapter1D<number> = {
       throw new Error(`invalid move destination: ${engineMove.destination}`);
 
     const captures = [];
-    for (const capture of decomposeBits(engineMove.captures)) {
+    for (const capture of BitwiseNumber.decompose(engineMove.captures)) {
       const captureRef = SQUARE_TO_REF.get(capture);
       if (captureRef !== undefined) captures.push(captureRef);
     }

@@ -7,8 +7,8 @@ import { alphaBeta, AlphaBetaOptions } from '../computer/alpha-beta';
 import { random } from '../computer/random';
 import { DraughtsEngine, DraughtsPlayer, DraughtsStatus } from '../core/engine';
 import { EnglishDraughtsAdapter1D } from './game';
-import { cardinality } from './utils';
 import Mask from './mask';
+import { BitwiseNumber } from '../bitwise/number';
 
 const statusToPlayer = {
   [DraughtsStatus.LIGHT_WON]: DraughtsPlayer.LIGHT,
@@ -57,22 +57,24 @@ function evaluateMiddlegame(engine: DraughtsEngine<number>): number {
   const opponent_back_row =
     engine.data.player === DraughtsPlayer.LIGHT ? Mask.RANK_7 : Mask.RANK_0;
 
-  const playerPieces = cardinality(player);
-  const opponentPieces = cardinality(opponent);
-  const playerKingsCount = cardinality(playerKings);
-  const opponentKingsCount = cardinality(opponentKings);
-  const playerBackRowCount = cardinality(player & back_row);
-  const opponentBackRowCount = cardinality(opponent & opponent_back_row);
-  const playerMiddleTwoRankFourFileCount = cardinality(
+  const playerPieces = BitwiseNumber.cardinality(player);
+  const opponentPieces = BitwiseNumber.cardinality(opponent);
+  const playerKingsCount = BitwiseNumber.cardinality(playerKings);
+  const opponentKingsCount = BitwiseNumber.cardinality(opponentKings);
+  const playerBackRowCount = BitwiseNumber.cardinality(player & back_row);
+  const opponentBackRowCount = BitwiseNumber.cardinality(
+    opponent & opponent_back_row
+  );
+  const playerMiddleTwoRankFourFileCount = BitwiseNumber.cardinality(
     player & Mask.MIDDLE_TWO_RANK_FOUR_FILE
   );
-  const opponentMiddleTwoRankFourFileCount = cardinality(
+  const opponentMiddleTwoRankFourFileCount = BitwiseNumber.cardinality(
     opponent & Mask.MIDDLE_TWO_RANK_FOUR_FILE
   );
-  const playerMiddleFourRankTwoFileCount = cardinality(
+  const playerMiddleFourRankTwoFileCount = BitwiseNumber.cardinality(
     player & Mask.MIDDLE_FOUR_RANK_TWO_FILE
   );
-  const opponentMiddleFourRankTwoFileCount = cardinality(
+  const opponentMiddleFourRankTwoFileCount = BitwiseNumber.cardinality(
     opponent & Mask.MIDDLE_FOUR_RANK_TWO_FILE
   );
 

@@ -1,3 +1,4 @@
+import { BitwiseNumber } from '../bitwise/number';
 import type {
   DraughtsEngineData,
   DraughtsEngineMove,
@@ -7,7 +8,6 @@ import { DraughtsEngine, DraughtsStatus, DraughtsPlayer } from '../core/engine';
 import { compareMove } from '../core/utils';
 import Mask from './mask';
 import { EnglishDraughtsMoveGeneratorFactory } from './move-generation';
-import { decomposeBits } from './utils';
 
 export type EnglishDraughtsEngineData = DraughtsEngineData<number>;
 
@@ -52,14 +52,14 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<number> = {
 
     const jumpers = generator.getJumpers();
     if (jumpers) {
-      for (const jumper of decomposeBits(jumpers)) {
+      for (const jumper of BitwiseNumber.decompose(jumpers)) {
         moves.push(...generator.getJumpsFromOrigin(jumper));
       }
       return moves;
     }
 
     const movers = generator.getMovers();
-    for (const mover of decomposeBits(movers)) {
+    for (const mover of BitwiseNumber.decompose(movers)) {
       moves.push(...generator.getMovesFromOrigin(mover));
     }
 
@@ -77,23 +77,35 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<number> = {
 
     const stats = { ...engine.data.stats };
 
-    board.light &= ~(move.origin | move.captures);
-    board.dark &= ~(move.origin | move.captures);
-    board.king &= ~(move.origin | move.captures);
+    // Remove the origin and captures from the board
+    const remaining = BitwiseNumber.not(
+      BitwiseNumber.or(move.origin, move.captures)
+    );
+    board.light = BitwiseNumber.and(board.light, remaining);
+    board.dark = BitwiseNumber.and(board.dark, remaining);
+    board.king = BitwiseNumber.and(board.king, remaining);
 
-    if (engine.data.board.light & move.origin) {
-      board.light |= move.destination;
-      board.king |= move.destination & Mask.RANK_7;
+    // Add the destination to the color board
+    if (BitwiseNumber.and(move.origin, engine.data.board.light)) {
+      board.light = BitwiseNumber.or(board.light, move.destination);
     } else {
-      board.dark |= move.destination;
-      board.king |= move.destination & Mask.RANK_0;
+      board.dark = BitwiseNumber.or(board.dark, move.destination);
     }
 
-    if (engine.data.board.king & move.origin) {
-      board.king |= move.destination;
-      stats.sinceNonKingAdvance += 1;
-    } else {
+    board.king = BitwiseNumber.or(
+      board.king,
+      BitwiseNumber.and(
+        move.destination,
+        BitwiseNumber.or(Mask.RANK_0, Mask.RANK_7)
+      )
+    );
+
+    // Add the destination to the king board
+    if (BitwiseNumber.and(move.destination, engine.data.board.king)) {
+      board.king = BitwiseNumber.or(board.king, move.destination);
       stats.sinceNonKingAdvance = 0;
+    } else {
+      stats.sinceNonKingAdvance += 1;
     }
 
     if (move.captures) {
