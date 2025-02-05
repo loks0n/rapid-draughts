@@ -77,10 +77,12 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<number> = {
 
     const stats = { ...engine.data.stats };
 
-    // Remove the origin and captures from the board
+    // Remove the origin and captures from the color boards
+    const isKing = BitwiseNumber.and(move.origin, engine.data.board.king);
     const remaining = BitwiseNumber.not(
       BitwiseNumber.or(move.origin, move.captures)
     );
+
     board.light = BitwiseNumber.and(board.light, remaining);
     board.dark = BitwiseNumber.and(board.dark, remaining);
     board.king = BitwiseNumber.and(board.king, remaining);
@@ -90,6 +92,10 @@ export const EnglishDraughtsEngineStrategy: DraughtsEngineStrategy<number> = {
       board.light = BitwiseNumber.or(board.light, move.destination);
     } else {
       board.dark = BitwiseNumber.or(board.dark, move.destination);
+    }
+
+    if (isKing) {
+      board.king = BitwiseNumber.or(board.king, move.destination);
     }
 
     board.king = BitwiseNumber.or(

@@ -296,3 +296,43 @@ describe('jump and become king', () => {
     ]);
   });
 });
+
+describe('move king', () => {
+  let engine: EnglishDraughtsEngine;
+
+  beforeEach(() => {
+    engine = EngineFactory.setup({
+      board: {
+        light: S[11],
+        dark: BitwiseNumber.or(S[24], S[14]),
+        king: S[11],
+      },
+      player: DraughtsPlayer.LIGHT,
+    });
+  });
+
+  test('correct moves', () => {
+    assert.sameDeepMembers(engine.moves, [
+      {
+        origin: S[11],
+        destination: S[10],
+        captures: 0,
+      },
+      {
+        origin: S[11],
+        destination: S[4],
+        captures: 0,
+      },
+    ]);
+
+    engine.move({
+      origin: S[11],
+      destination: S[4],
+      captures: 0,
+    });
+
+    assert.equal(engine.data.board.light, S[4]);
+    assert.equal(engine.data.board.dark, BitwiseNumber.or(S[24], S[14]));
+    assert.equal(engine.data.board.king, S[4]);
+  });
+});
