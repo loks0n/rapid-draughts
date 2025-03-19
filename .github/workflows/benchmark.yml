@@ -43,3 +43,5 @@ jobs:
           comment-on-alert: true
           fail-on-alert: false
           max-items-in-chart: 20
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench
