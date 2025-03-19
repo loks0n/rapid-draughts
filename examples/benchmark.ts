@@ -1,5 +1,5 @@
 import { performance } from 'node:perf_hooks';
-import { DraughtsPlayer, DraughtsStatus } from '../src/core';
+import { DraughtsStatus } from '../src/core';
 import {
   EnglishDraughts as Draughts,
   EnglishDraughtsComputerFactory as ComputerFactory,
@@ -15,7 +15,7 @@ const benchmarks = {
     return () => {
       // Create a fresh instance for each test
       const draughts = Draughts.setup();
-      
+
       // Generate and count all available moves
       const moves = draughts.moves;
       return moves.length;
@@ -23,12 +23,12 @@ const benchmarks = {
   },
   'Random Computer (100 moves)': () => {
     const computer = ComputerFactory.random();
-    
+
     return async () => {
       // Create a fresh game for each test
       const testDraughts = Draughts.setup();
       let moveCount = 0;
-      
+
       // Play 100 moves or until game is over
       while (testDraughts.status === DraughtsStatus.PLAYING && moveCount < 100) {
         const move = await computer(testDraughts);
@@ -39,7 +39,7 @@ const benchmarks = {
           break;
         }
       }
-      
+
       return moveCount;
     };
   },
