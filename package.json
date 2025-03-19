@@ -59,6 +59,7 @@
     "prepublishOnly": "publint",
     "build": "tsc && vite build",
     "examples:basic": "vite-node examples/basic.ts",
+    "benchmark": "vite-node examples/benchmark.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write src",

@@ -5,6 +5,7 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/loks0n/rapid-draughts/badge.svg)
 [![Package quality](https://packagequality.com/shield/rapid-draughts.png)](https://packagequality.com/#?package=rapid-draughts)
 ![License](https://img.shields.io/github/license/loks0n/rapid-draughts?color=lightgrey)
+![Benchmark](https://img.shields.io/badge/Benchmarks-Available-brightgreen)
 
 A *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engine with move validation, AI and game history.
 
