@@ -8,6 +8,7 @@ export default defineConfig({
       entry: {
         index: './src/core/index.ts',
         english: './src/english/index.ts',
+        italian: './src/italian/index.ts',
       },
       formats: ['es', 'cjs'],
     },

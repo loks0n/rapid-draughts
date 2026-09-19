@@ -27,7 +27,8 @@
     "draughts validation",
     "boardgame",
     "bitboard",
-    "english draughts"
+    "english draughts",
+    "italian draughts"
   ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -42,6 +43,11 @@
       "types": "./dist/english.d.ts",
       "import": "./dist/english.js",
       "require": "./dist/english.cjs"
+    },
+    "./italian": {
+      "types": "./dist/italian.d.ts",
+      "import": "./dist/italian.js",
+      "require": "./dist/italian.cjs"
     }
   },
   "typesVersions": {
@@ -51,6 +57,9 @@
       ],
       "english": [
         "./dist/english.d.ts"
+      ],
+      "italian": [
+        "./dist/italian.d.ts"
       ]
     }
   },
