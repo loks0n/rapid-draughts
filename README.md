@@ -11,7 +11,8 @@ A *super speedy, blazing fast, rocket-powered* TypeScript draughts/checkers engi
 
 It uses bitboards, a board representation that holds the draughts board in three 32 or 64 bit unsigned integers. One for the light pieces, dark pieces and the king pieces. Bitboards enable fast move generation and have minimal memory usage.
 
-The english draughts / american checkers engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).
+The english draughts / american checkers engine follows the [WCDF ruleset](https://www.wcdf.net/rules.htm).\
+The italian draughts engine follows the [FID ruleset](https://www.federdama.org/cms/index.php/federazione-1/statuti-e-regolamenti/regolamento-tecnico).
 
 ## Installing
 
